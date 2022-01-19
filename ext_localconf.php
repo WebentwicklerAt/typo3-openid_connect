@@ -8,6 +8,24 @@ defined('TYPO3_MODE') or die();
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
         'openid_connect',
         'auth',
+        'tx_openidconnect_service_process',
+        [
+            'title' => 'OpenID Connect Authentication',
+            'description' => 'OpenID Connect processing login information service for Frontend and Backend',
+            'subtype' => 'processLoginDataBE,processLoginDataFE',
+            'available' => true,
+            'priority' => 35,
+            // Must be lower than for \TYPO3\CMS\Sv\AuthenticationService (50) to let other processing take place before
+            'quality' => 50,
+            'os' => '',
+            'exec' => '',
+            'className' => \WebentwicklerAt\OpenidConnect\Service\AuthenticationService::class
+        ]
+    );
+
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
+        'openid_connect',
+        'auth',
         'tx_openidconnect_service',
         [
             'title' => 'OpenID Connect Authentication',
@@ -23,10 +41,26 @@ defined('TYPO3_MODE') or die();
         ]
     );
 
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][1642422526] = [
+
+    $loginProviderKey = \WebentwicklerAt\OpenidConnect\LoginProvider\AutoLoginProvider::LOGIN_PROVIDER_KEY;
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][$loginProviderKey] = [
+        'provider' => \WebentwicklerAt\OpenidConnect\LoginProvider\AutoLoginProvider::class,
+        'sorting' => 100,
+        'icon-class' => 'fa-link',
+        'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:auto_login_provider.login.link'
+    ];
+
+    $loginProviderKey = \WebentwicklerAt\OpenidConnect\LoginProvider\OpenidConnectLoginProvider::LOGIN_PROVIDER_KEY;
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][$loginProviderKey] = [
         'provider' => \WebentwicklerAt\OpenidConnect\LoginProvider\OpenidConnectLoginProvider::class,
         'sorting' => 25,
         'icon-class' => 'fa-openid',
-        'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:login.link'
+        'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:openid_connect_login_provider.login.link'
     ];
+
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['getUser']['tx_openidconnect'] =
+        \WebentwicklerAt\OpenidConnect\Hook\AuthenticationServiceHook::class . '->getUser';
+
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['authUser']['tx_openidconnect'] =
+        \WebentwicklerAt\OpenidConnect\Hook\AuthenticationServiceHook::class . '->authUser';
 })();

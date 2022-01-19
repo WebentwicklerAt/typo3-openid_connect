@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2022-01-18T15:45:02Z" product-name="openid_connect">
+        <header/>
+        <body>
+            <trans-unit id="discoveryUrl" xml:space="preserve">
+                <source>Discovery-URL (if available, otherwise URLs below have to be specified):(e.g.: "https://sso.local/auth/realms/main/" if full path is "https://sso.local/auth/realms/main/.well-known/openid-configuration")</source>
+            </trans-unit>
+            <trans-unit id="authUrl" xml:space="preserve">
+                <source>Auth-URL (optional if Discovery-URL is set):(e.g.: "https://sso.local/auth/realms/main/protocol/openid-connect/auth")</source>
+            </trans-unit>
+            <trans-unit id="tokenUrl" xml:space="preserve">
+                <source>Token-URL (optional if Discovery-URL is set):(e.g.: "https://sso.local/auth/realms/main/protocol/openid-connect/token")</source>
+            </trans-unit>
+            <trans-unit id="logoutUrl" xml:space="preserve">
+                <source>Logout-URL (optional if Discovery-URL is set):(e.g.: "https://sso.local/auth/realms/main/protocol/openid-connect/logout")</source>
+            </trans-unit>
+            <trans-unit id="userinfoUrl" xml:space="preserve">
+                <source>Userinfo-URL (optional if Discovery-URL is set):(e.g.: "https://sso.local/auth/realms/main/protocol/openid-connect/userinfo")</source>
+            </trans-unit>
+            <trans-unit id="revokeUrl" xml:space="preserve">
+                <source>Revoke-URL (optional if Discovery-URL is set):(e.g.: "https://sso.local/auth/realms/main/protocol/openid-connect/revoke")</source>
+            </trans-unit>
+            <trans-unit id="clientId" xml:space="preserve">
+                <source>Client-ID</source>
+            </trans-unit>
+            <trans-unit id="clientSecret" xml:space="preserve">
+                <source>Client-Secret</source>
+            </trans-unit>
+            <trans-unit id="backendLoginProviderTemplate" xml:space="preserve">
+                <source>Path to backend template:(default: "EXT:openid_connect/Resources/Private/Templates/Backend/Login.html")</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

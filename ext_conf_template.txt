@@ -1,0 +1,19 @@
+  # cat=General/enable/010; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:discoveryUrl
+discoveryUrl=
+  # cat=General/enable/020; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:authUrl
+authUrl=
+  # cat=General/enable/030; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:tokenUrl
+tokenUrl=
+  # cat=General/enable/040; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:logoutUrl
+logoutUrl=
+  # cat=General/enable/050; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:userinfoUrl
+userinfoUrl=
+  # cat=General/enable/060; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:revokeUrl
+revokeUrl=
+  # cat=General/enable/110; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:clientId
+clientId=
+  # cat=General/enable/120; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:clientSecret
+clientSecret=
+
+  # cat=Backend/enable/010; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:backendLoginProviderTemplate
+backendLoginTemplate=EXT:openid_connect/Resources/Private/Templates/Backend/Login.html

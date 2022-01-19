@@ -4,8 +4,9 @@
 
 <f:section name="loginFormFields">
     <div class="form-group t3js-login-openidconnect-section" id="t3-login-openidconnect-section">
+        <input type="hidden" id="tx_openidconnect" name="tx_openidconnect" value="login" />
         <div class="h1 text-center mb-4"><i class="fa fa-openid" aria-hidden="true"></i></div>
-        <div class="h3 text-center mb-3 fw-normal">{f:translate(key: 'login.info')}</div>
+        <div class="h3 text-center mb-3 fw-normal">{f:translate(key: 'openid_connect_login_provider.login.info', extensionName: 'openid_connect')}</div>
     </div>
 </f:section>
 </html>

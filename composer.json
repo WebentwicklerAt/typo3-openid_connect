@@ -4,7 +4,8 @@
   "license": "GPL-2.0-or-later",
   "require": {
     "typo3/cms-core": "^10.4",
-    "jumbojett/openid-connect-php": "v0.9.5"
+    "jumbojett/openid-connect-php": "v0.9.5",
+    "ext-json": "*"
   },
   "replace": {
     "typo3-ter/openid_connect": "self.version"
