@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2022-01-18T15:45:02Z" product-name="openid_connect">
+        <header/>
+        <body>
+            <trans-unit id="login.link" xml:space="preserve">
+                <source>Login with OpenID Connect</source>
+            </trans-unit>
+            <trans-unit id="login.info" xml:space="preserve">
+                <source>Login with OpenID Connect</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
