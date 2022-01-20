@@ -51,7 +51,7 @@ abstract class AbstractLoginProvider implements LoginProviderInterface
         LoginController $loginController
     )
     {
-        $filename = $this->extensionConfiguration['backendLoginProviderTemplate'] ?: static::DEFAULT_TEMPLATE;
+        $filename = $this->extensionConfiguration['backendLoginProviderTemplate'] ?? static::DEFAULT_TEMPLATE;
         $templatePathAndFilename = GeneralUtility::getFileAbsFileName($filename);
         $view->setTemplatePathAndFilename($templatePathAndFilename);
         $view->assignMultiple([

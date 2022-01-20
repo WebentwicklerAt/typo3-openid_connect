@@ -121,12 +121,16 @@ class OpenidConnectService implements SingletonInterface
 
     /**
      * @param string|null $attribute
-     * @return mixed|null
+     * @return array|null
      * @throws \Exception
      */
-    public function userinfo(?string $attribute = null)
+    public function userinfo(?string $attribute = null): ?array
     {
-        return $this->client->requestUserInfo($attribute);
+        $userinfo = $this->client->requestUserInfo($attribute);
+        if (get_class($userinfo) === \stdClass::class) {
+            $userinfo = json_decode(json_encode($userinfo), true);
+        }
+        return $userinfo;
     }
 
     public function revoke()

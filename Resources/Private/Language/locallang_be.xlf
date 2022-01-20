@@ -45,6 +45,9 @@
             <trans-unit id="enableAuthenticationServiceHooks" xml:space="preserve">
                 <source>Enable AuthenticationServiceHooks</source>
             </trans-unit>
+            <trans-unit id="mappingConfiguration" xml:space="preserve">
+                <source>Path to mapping configuration:(default: "EXT:openid_connect/Configuration/TypoScript/Mapping.typoscript")</source>
+            </trans-unit>
             <trans-unit id="disableTlsVerify" xml:space="preserve">
                 <source>Disable TLS-Verfiy (DO NOT USE THIS IN PRODUCTION!):(this setting is not considered if environment is set to production)</source>
             </trans-unit>

@@ -1,0 +1,55 @@
+config.tx_openidconnect {
+    settings {
+        BE {
+            username = TEXT
+            username.field = preferred_username
+
+            create = 0
+            create {
+                email = TEXT
+                email.field = email
+
+                realName = TEXT
+                realName.field = name
+            }
+
+            update < .create
+            update = 0
+
+            create {
+                disable = TEXT
+                disable.value = 1
+            }
+        }
+
+        FE {
+            username = TEXT
+            username.field = preferred_username
+
+            create = 0
+            create {
+                email = TEXT
+                email.field = email
+
+                first_name = TEXT
+                first_name.field = given_name
+
+                last_name = TEXT
+                last_name.field = family_name
+
+                name = COA
+                name.10 < .first_name
+                name.10.noTrimWrap = || |
+                name.20 < .last_name
+            }
+
+            update < .create
+            update = 0
+
+            create {
+                disable = TEXT
+                disable.value = 1
+            }
+        }
+    }
+}

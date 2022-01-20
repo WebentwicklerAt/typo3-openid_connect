@@ -48,14 +48,38 @@ class BackendUserRepository implements UserRepositoryInterface
         return $statement->fetchAssociative();
     }
 
-    public function createUser(array $user)
+    /**
+     * @param array $user
+     * @return void
+     */
+    public function createUser(array $user): void
     {
-        // TODO: Implement createUser() method.
+        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder
+            ->insert($this->tableName)
+            ->values($user)
+            ->execute();
     }
 
-    public function updateUser(array $user)
+    /**
+     * @param array $user
+     * @return void
+     */
+    public function updateUser(array $user): void
     {
-        // TODO: Implement updateUser() method.
+        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder
+            ->update($this->tableName)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'uid',
+                    $queryBuilder->createNamedParameter($user['uid'], \PDO::PARAM_INT)
+                )
+            );
+        foreach ($user as $key => $value) {
+            $queryBuilder->set($key, $value);
+        }
+        $queryBuilder->execute();
     }
 
     /**

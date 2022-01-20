@@ -29,5 +29,7 @@ enableFrontendLogin=0
 
   # cat=Advanced/enable/010; type=boolean; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:enableAuthenticationServiceHooks
 enableAuthenticationServiceHooks=1
-  # cat=Advanced/enable/020; type=boolean; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:disableTlsVerify
+  # cat=Advanced/enable/020; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:mappingConfiguration
+mappingConfiguration=EXT:openid_connect/Configuration/TypoScript/Mapping.typoscript
+  # cat=Advanced/enable/030; type=boolean; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:disableTlsVerify
 disableTlsVerify=0

@@ -19,7 +19,7 @@ namespace WebentwicklerAt\OpenidConnect\Hook;
 use WebentwicklerAt\OpenidConnect\Repository\UserRepositoryInterface;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
 
-class AuthenticationServiceHook
+class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
 {
     /**
      * @param array $params
@@ -34,12 +34,30 @@ class AuthenticationServiceHook
         $userinfo = $params['userinfo'];
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = $params['userRepository'];
-        $user = $userRepository->getUser($userinfo->SamAccountName);
-        if ($user) {
-            // todo: update user
+        $username = $this->mapField(
+            $this->settings['username'],
+            $this->settings['username.'],
+            $userinfo
+        );
+        $user = $userRepository->getUser($username);
+        if (
+            $user
+            && array_key_exists('update',$this->settings)
+            && $this->settings['update']
+        ) {
+            $this->mapFields($user, $this->settings['update.'], $userinfo);
+            $userRepository->updateUser($user);
+            $user = $userRepository->getUser($username);
             $params['user'] = $user;
-        } else {
-            // todo: create user
+        } elseif (
+            array_key_exists('insert',$this->settings)
+            && $this->settings['insert']
+        ) {
+            $user = [];
+            $this->mapFields($user, $this->settings['update.'], $userinfo);
+            $userRepository->createUser($user);
+            $user = $userRepository->getUser($username);
+            $params['user'] = $user;
         }
         return $params;
     }

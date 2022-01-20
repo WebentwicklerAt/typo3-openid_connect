@@ -48,7 +48,7 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
     const AUTH_USER_NOTAUTHENTICATED_FINAL = -1;
 
     /**
-     * @var mixed|null
+     * @var array|null
      */
     protected $userinfo;
 
