@@ -34,7 +34,7 @@ class AuthenticationServiceHook
         $userinfo = $params['userinfo'];
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = $params['userRepository'];
-        $user = $userRepository->getUser($userinfo->preferred_username);
+        $user = $userRepository->getUser($userinfo->SamAccountName);
         if ($user) {
             // todo: update user
             $params['user'] = $user;

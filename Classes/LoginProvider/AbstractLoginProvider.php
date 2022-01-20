@@ -20,14 +20,25 @@ use TYPO3\CMS\Backend\Controller\LoginController;
 use TYPO3\CMS\Backend\LoginProvider\LoginProviderInterface;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
-use WebentwicklerAt\OpenidConnect\Utility\OpenidConnectUtility;
 
-class AutoLoginProvider extends AbstractLoginProvider implements LoginProviderInterface
+abstract class AbstractLoginProvider implements LoginProviderInterface
 {
-    const LOGIN_PROVIDER_KEY = 1433416748;
+    const DEFAULT_TEMPLATE = 'EXT:openid_connect/Resources/Private/Templates/Backend/Login.html';
+
+    /**
+     * @var array
+     */
+    protected $extensionConfiguration;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?: [];
+    }
 
     /**
      * @param StandaloneView $view
@@ -40,16 +51,11 @@ class AutoLoginProvider extends AbstractLoginProvider implements LoginProviderIn
         LoginController $loginController
     )
     {
-        if (
-            GeneralUtility::_GET('autologin') !== '0'
-            && GeneralUtility::_GET('login_status') === null
-        ) {
-            $redirectUri = OpenidConnectUtility::getRedirectUri(
-                AuthenticationService::LOGINTYPE_LOGIN,
-                AuthenticationService::OIDC_LOGIN
-            );
-            HttpUtility::redirect($redirectUri);
-        }
-        parent::render($view, $pageRenderer, $loginController);
+        $filename = $this->extensionConfiguration['backendLoginProviderTemplate'] ?: static::DEFAULT_TEMPLATE;
+        $templatePathAndFilename = GeneralUtility::getFileAbsFileName($filename);
+        $view->setTemplatePathAndFilename($templatePathAndFilename);
+        $view->assignMultiple([
+            'tx_openidconnect' => AuthenticationService::OIDC_LOGIN,
+        ]);
     }
 }

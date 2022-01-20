@@ -91,8 +91,10 @@ class OpenidConnectService implements SingletonInterface
         );
         $scopes = [
             'openid',
-            'profile',
             'email',
+            'member-of',
+            'profile',
+            'SimpleUserNameSAM',
         ];
         $addScopes = array_diff($scopes, $currentScopes);
         $this->client->addScope($addScopes);

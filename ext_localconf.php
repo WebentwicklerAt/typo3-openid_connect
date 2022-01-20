@@ -42,16 +42,16 @@ defined('TYPO3_MODE') or die();
     );
 
 
-    $loginProviderKey = \WebentwicklerAt\OpenidConnect\LoginProvider\AutoLoginProvider::LOGIN_PROVIDER_KEY;
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][$loginProviderKey] = [
+    $autoLoginProviderKey = \WebentwicklerAt\OpenidConnect\LoginProvider\AutoLoginProvider::LOGIN_PROVIDER_KEY;
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][$autoLoginProviderKey] = [
         'provider' => \WebentwicklerAt\OpenidConnect\LoginProvider\AutoLoginProvider::class,
         'sorting' => 100,
         'icon-class' => 'fa-link',
         'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:auto_login_provider.login.link'
     ];
 
-    $loginProviderKey = \WebentwicklerAt\OpenidConnect\LoginProvider\OpenidConnectLoginProvider::LOGIN_PROVIDER_KEY;
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][$loginProviderKey] = [
+    $openidConnectLoginProviderKey = \WebentwicklerAt\OpenidConnect\LoginProvider\OpenidConnectLoginProvider::LOGIN_PROVIDER_KEY;
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][$openidConnectLoginProviderKey] = [
         'provider' => \WebentwicklerAt\OpenidConnect\LoginProvider\OpenidConnectLoginProvider::class,
         'sorting' => 25,
         'icon-class' => 'fa-openid',
