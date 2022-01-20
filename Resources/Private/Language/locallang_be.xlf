@@ -27,8 +27,26 @@
             <trans-unit id="clientSecret" xml:space="preserve">
                 <source>Client-Secret</source>
             </trans-unit>
+            <trans-unit id="scopes" xml:space="preserve">
+                <source>Scopes:(e.g.: "openid,profile,email")</source>
+            </trans-unit>
+            <trans-unit id="enableBackendLogin" xml:space="preserve">
+                <source>Enable Backend-Login</source>
+            </trans-unit>
+            <trans-unit id="enableBackendAutoLogin" xml:space="preserve">
+                <source>Enable Backend-AutoLogin</source>
+            </trans-unit>
             <trans-unit id="backendLoginProviderTemplate" xml:space="preserve">
                 <source>Path to backend template:(default: "EXT:openid_connect/Resources/Private/Templates/Backend/Login.html")</source>
+            </trans-unit>
+            <trans-unit id="enableFrontendLogin" xml:space="preserve">
+                <source>Enable Frontend-Login</source>
+            </trans-unit>
+            <trans-unit id="enableAuthenticationServiceHooks" xml:space="preserve">
+                <source>Enable AuthenticationServiceHooks</source>
+            </trans-unit>
+            <trans-unit id="disableTlsVerify" xml:space="preserve">
+                <source>Disable TLS-Verfiy (DO NOT USE THIS IN PRODUCTION!):(this setting is not considered if environment is set to production)</source>
             </trans-unit>
         </body>
     </file>

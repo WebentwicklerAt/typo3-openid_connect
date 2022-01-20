@@ -17,6 +17,7 @@ namespace WebentwicklerAt\OpenidConnect\Service;
  */
 
 use Jumbojett\OpenIDConnectClient;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WebentwicklerAt\OpenidConnect\LoginProvider\OpenidConnectLoginProvider;
@@ -60,7 +61,7 @@ class OpenidConnectService implements SingletonInterface
      */
     public function __construct(array $settings = [])
     {
-        $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?: [];
+        $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?? [];
         $this->settings = $settings;
         $this->client = GeneralUtility::makeInstance(
             OpenIDConnectClient::class,
@@ -68,6 +69,13 @@ class OpenidConnectService implements SingletonInterface
             $this->extensionConfiguration['clientId'] ?: null,
             $this->extensionConfiguration['clientSecret'] ?: null
         );
+        if (
+            !Environment::getContext()->isProduction()
+            && $this->extensionConfiguration['disableTlsVerify']
+        ) {
+            $this->client->setVerifyHost(false);
+            $this->client->setVerifyPeer(false);
+        }
     }
 
     public function discover()
@@ -83,21 +91,6 @@ class OpenidConnectService implements SingletonInterface
     public function auth(?Settings $settings = null): bool
     {
         $this->setClientSettings($settings);
-        $currentScopes = array_merge(
-            $this->client->getScopes(),
-            [
-                'openid', // scope 'openid' is always requested
-            ]
-        );
-        $scopes = [
-            'openid',
-            'email',
-            'member-of',
-            'profile',
-            'SimpleUserNameSAM',
-        ];
-        $addScopes = array_diff($scopes, $currentScopes);
-        $this->client->addScope($addScopes);
         $isAuthenticated = $this->client->authenticate();
         if ($isAuthenticated) {
             //$tokenResponse = $this->client->getTokenResponse();
@@ -151,6 +144,16 @@ class OpenidConnectService implements SingletonInterface
         if ($settings) {
             if ($settings->getRedirectUri()) {
                 $this->client->setRedirectURL($settings->getRedirectUri());
+            }
+            if ($scopesArray = $settings->getScopesArray()) {
+                $currentScopes = array_merge(
+                    $this->client->getScopes(),
+                    [
+                        'openid', // scope 'openid' is always requested
+                    ]
+                );
+                $addScopes = array_diff($scopesArray, $currentScopes);
+                $this->client->addScope($addScopes);
             }
         }
     }

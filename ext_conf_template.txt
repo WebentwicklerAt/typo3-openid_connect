@@ -14,6 +14,20 @@ revokeUrl=
 clientId=
   # cat=General/enable/120; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:clientSecret
 clientSecret=
+  # cat=General/enable/130; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:scopes
+scopes=openid,profile,email
 
-  # cat=Backend/enable/010; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:backendLoginProviderTemplate
+  # cat=Backend/enable/010; type=boolean; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:enableBackendLogin
+enableBackendLogin=0
+  # cat=Backend/enable/020; type=boolean; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:enableBackendAutoLogin
+enableBackendAutoLogin=0
+  # cat=Backend/enable/030; type=string; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:backendLoginProviderTemplate
 backendLoginTemplate=EXT:openid_connect/Resources/Private/Templates/Backend/Login.html
+
+  # cat=Frontend/enable/010; type=boolean; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:enableFrontendLogin
+enableFrontendLogin=0
+
+  # cat=Advanced/enable/010; type=boolean; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:enableAuthenticationServiceHooks
+enableAuthenticationServiceHooks=1
+  # cat=Advanced/enable/020; type=boolean; label=LLL:EXT:openid_connect/Resources/Private/Language/locallang_be.xlf:disableTlsVerify
+disableTlsVerify=0

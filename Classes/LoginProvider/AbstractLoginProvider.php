@@ -37,7 +37,7 @@ abstract class AbstractLoginProvider implements LoginProviderInterface
      */
     public function __construct()
     {
-        $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?: [];
+        $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?? [];
     }
 
     /**

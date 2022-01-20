@@ -16,8 +16,24 @@ namespace WebentwicklerAt\OpenidConnect\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 class Settings
 {
+    /**
+     * @var array
+     */
+    protected $extensionConfiguration;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?? [];
+        $this->scopes = $this->extensionConfiguration['scopes'];
+    }
+
     /**
      * @var string
      */
@@ -38,5 +54,69 @@ class Settings
     public function getRedirectUri(): ?string
     {
         return $this->redirectUri;
+    }
+
+    /**
+     * @var string
+     */
+    protected $scopes;
+
+    /**
+     * @param string $scopes
+     * @return void
+     */
+    public function setScopes(string $scopes)
+    {
+        $this->scopes = $scopes;
+    }
+
+    /**
+     * @param array $scopes
+     * @return void
+     */
+    public function setScopesArray(array $scopes)
+    {
+        $this->scopes = implode(',', $scopes);
+    }
+
+    /**
+     * @param
+     * @return void
+     */
+    public function addScopes($scopes)
+    {
+        $items = $this->getScopesArray();
+        $items[] = $scopes;
+        $this->setScopesArray($items);
+    }
+
+    /**
+     * @param
+     * @return void
+     */
+    public function removeScopes($scopes)
+    {
+        $items = $this->getScopesArray();
+        $key = array_search($scopes, $items);
+        if ($key !== false) {
+            unset($items[$key]);
+            $this->setScopesArray($items);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getScopesArray()
+    {
+        return GeneralUtility::trimExplode(',', $this->scopes, true);
+    }
+
+    /**
+     * @return string
+     */
+    public function getScopes()
+    {
+        return $this->scopes;
     }
 }
