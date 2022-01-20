@@ -25,7 +25,7 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use WebentwicklerAt\OpenidConnect\Controller\TypoScriptFrontendController;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
 
-abstract class AbstractAuthenticationServiceHook
+abstract class AbstractAuthenticationServiceHook implements AuthenticationServiceHookInterface
 {
     const DEFAULT_MAPPING_CONFIGURATION = 'EXT:openid_connect/Configuration/TypoScript/Mapping.typoscript';
 
