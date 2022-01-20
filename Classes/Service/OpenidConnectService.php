@@ -83,9 +83,22 @@ class OpenidConnectService implements SingletonInterface
     public function auth(?Settings $settings = null): bool
     {
         $this->setClientSettings($settings);
+        $currentScopes = array_merge(
+            $this->client->getScopes(),
+            [
+                'openid', // scope 'openid' is always requested
+            ]
+        );
+        $scopes = [
+            'openid',
+            'profile',
+            'email',
+        ];
+        $addScopes = array_diff($scopes, $currentScopes);
+        $this->client->addScope($addScopes);
         $isAuthenticated = $this->client->authenticate();
         if ($isAuthenticated) {
-            $tokenResponse = $this->client->getTokenResponse();
+            //$tokenResponse = $this->client->getTokenResponse();
             //if (!isset($_SESSION)) {
             //    @session_start();
             //}
