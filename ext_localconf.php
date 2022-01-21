@@ -4,9 +4,6 @@ defined('TYPO3_MODE') or die();
 (function () {
     $extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?? [];
 
-    // Use popup window to refresh login instead of the AJAX relogin:
-    $GLOBALS['TYPO3_CONF_VARS']['BE']['showRefreshLoginPopup'] = 1;
-
     $authenticationServiceProcessSubtypeArray = [];
     $authenticationServiceSubtypeArray = [];
     if ($extensionConfiguration['enableBackendLogin']) {
@@ -70,17 +67,10 @@ defined('TYPO3_MODE') or die();
         }
     }
 
-    if ($extensionConfiguration['enableBackendAutoLogin']) {
-        $autoLoginProviderKey = \WebentwicklerAt\OpenidConnect\LoginProvider\AutoLoginProvider::LOGIN_PROVIDER_KEY;
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][$autoLoginProviderKey] = [
-            'provider' => \WebentwicklerAt\OpenidConnect\LoginProvider\AutoLoginProvider::class,
-            'sorting' => 100,
-            'icon-class' => 'fa-link',
-            'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:auto_login_provider.login.link'
-        ];
-    }
-
     if ($extensionConfiguration['enableBackendLogin']) {
+        // Use popup window to refresh login instead of the AJAX relogin:
+        $GLOBALS['TYPO3_CONF_VARS']['BE']['showRefreshLoginPopup'] = 1;
+
         $openidConnectLoginProviderKey = \WebentwicklerAt\OpenidConnect\LoginProvider\OpenidConnectLoginProvider::LOGIN_PROVIDER_KEY;
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][$openidConnectLoginProviderKey] = [
             'provider' => \WebentwicklerAt\OpenidConnect\LoginProvider\OpenidConnectLoginProvider::class,
@@ -88,5 +78,15 @@ defined('TYPO3_MODE') or die();
             'icon-class' => 'fa-openid',
             'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:openid_connect_login_provider.login.link'
         ];
+
+        if ($extensionConfiguration['enableBackendAutoLogin']) {
+            $autoLoginProviderKey = \WebentwicklerAt\OpenidConnect\LoginProvider\AutoLoginProvider::LOGIN_PROVIDER_KEY;
+            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][$autoLoginProviderKey] = [
+                'provider' => \WebentwicklerAt\OpenidConnect\LoginProvider\AutoLoginProvider::class,
+                'sorting' => 100,
+                'icon-class' => 'fa-link',
+                'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:auto_login_provider.login.link'
+            ];
+        }
     }
 })();

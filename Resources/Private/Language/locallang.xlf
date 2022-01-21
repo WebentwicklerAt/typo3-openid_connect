@@ -4,7 +4,7 @@
         <header/>
         <body>
             <trans-unit id="auto_login_provider.login.link" xml:space="preserve">
-                <source>AutoLogin</source>
+                <source>AutoLogin with OpenID Connect</source>
             </trans-unit>
             <trans-unit id="openid_connect_login_provider.login.link" xml:space="preserve">
                 <source>Login with OpenID Connect</source>

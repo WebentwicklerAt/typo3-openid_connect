@@ -112,7 +112,11 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
     public function getUser()
     {
         $user = false;
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['getUser'])) {
+        if (
+            is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['getUser'])
+            && is_array($this->userinfo)
+            && count($this->userinfo)
+        ) {
             $_params = [
                 'user' => &$user,
                 'userinfo' => $this->userinfo,
@@ -141,7 +145,11 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
     public function authUser(array $user): int
     {
         $auth = static::AUTH_USER_NOTAUTHENTICATED;
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['authUser'])) {
+        if (
+            is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['authUser'])
+            && is_array($this->userinfo)
+            && count($this->userinfo)
+        ) {
             $_params = [
                 'auth' => &$auth,
                 'user' => $user,

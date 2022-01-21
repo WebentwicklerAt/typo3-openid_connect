@@ -34,7 +34,7 @@
                 <source>Enable Backend-Login</source>
             </trans-unit>
             <trans-unit id="enableBackendAutoLogin" xml:space="preserve">
-                <source>Enable Backend-AutoLogin</source>
+                <source>Enable Backend-AutoLogin:(requires "Enable Backend-Login" activated)</source>
             </trans-unit>
             <trans-unit id="backendLoginProviderTemplate" xml:space="preserve">
                 <source>Path to backend template:(default: "EXT:openid_connect/Resources/Private/Templates/Backend/Login.html")</source>
