@@ -37,6 +37,8 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
 
     const OIDC_LOGIN = 'login';
     const OIDC_LOGINRETURN = 'loginreturn';
+    const OIDC_LOGOUT = 'logout';
+    const OIDC_LOGOUTRETURN = 'logoutreturn';
 
     const PROCESS_PROCESSED = true;
     const PROCESS_PROCESSED_FINAL = 200;

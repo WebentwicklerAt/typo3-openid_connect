@@ -33,11 +33,15 @@ class OpenidConnectUtility
         // [path]
         $requestUri = parse_url(GeneralUtility::getIndpEnv('REQUEST_URI'));
         $redirectUri .= $requestUri['path'];
-        parse_str($requestUri['query'] ?: '', $query);
-        $query['login_status'] = $loginStatus;
-        $query['tx_openidconnect'] = $loginReturn;
-        $query = static::removeOpenidConnectQueryParameter($query);
         // ?[query]
+        $query = [];
+        if (TYPO3_MODE === 'FE') {
+            $query['logintype'] = $loginStatus;
+            $query['tx_openidconnect'] = $loginReturn;
+        } else {
+            $query['login_status'] = $loginStatus;
+            $query['tx_openidconnect'] = $loginReturn;
+        }
         $redirectUri .= '?' . http_build_query($query);
         return $redirectUri;
     }
