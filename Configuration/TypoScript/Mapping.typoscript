@@ -4,8 +4,14 @@ config.tx_openidconnect {
             username = TEXT
             username.field = preferred_username
 
-            create = 0
-            create {
+            update = 0
+            update {
+                tstamp = TEXT
+                tstamp.data = date:U
+
+                password = USER
+                password.userFunc = WebentwicklerAt\OpenidConnect\UserFunc\Misc->randomString
+
                 email = TEXT
                 email.field = email
 
@@ -13,12 +19,16 @@ config.tx_openidconnect {
                 realName.field = name
             }
 
-            update < .create
-            update = 0
-
+            create < .update
             create {
+                username = TEXT
+                username.field = preferred_username
+
                 disable = TEXT
                 disable.value = 1
+
+                crdate = TEXT
+                crdate.data = date:U
             }
         }
 
@@ -26,8 +36,17 @@ config.tx_openidconnect {
             username = TEXT
             username.field = preferred_username
 
-            create = 0
-            create {
+            update = 0
+            update {
+                pid = TEXT
+                pid = 2
+
+                tstamp = TEXT
+                tstamp.data = date:U
+
+                password = USER
+                password.userFunc = WebentwicklerAt\OpenidConnect\UserFunc\Misc->randomString
+
                 email = TEXT
                 email.field = email
 
@@ -43,12 +62,16 @@ config.tx_openidconnect {
                 name.20 < .last_name
             }
 
-            update < .create
-            update = 0
-
+            create < .update
             create {
+                username = TEXT
+                username.field = preferred_username
+
                 disable = TEXT
                 disable.value = 1
+
+                crdate = TEXT
+                crdate.data = date:U
             }
         }
     }
