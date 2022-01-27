@@ -16,20 +16,10 @@ namespace WebentwicklerAt\OpenidConnect\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
-class FrontendUserRepository implements UserRepositoryInterface
+class FrontendUserRepository extends AbstractUserRepository implements UserRepositoryInterface
 {
-    public function getUser()
-    {
-        // TODO: Implement getUser() method.
-    }
-
-    public function createUser(array $user)
-    {
-        // TODO: Implement createUser() method.
-    }
-
-    public function updateUser(array $user)
-    {
-        // TODO: Implement updateUser() method.
-    }
+    /**
+     * @var string
+     */
+    protected $tableName = 'fe_users';
 }
