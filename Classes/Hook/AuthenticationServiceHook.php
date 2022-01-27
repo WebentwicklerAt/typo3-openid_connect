@@ -50,11 +50,11 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
             $user = $userRepository->getUser($username);
             $params['user'] = $user;
         } elseif (
-            array_key_exists('insert',$this->settings)
-            && $this->settings['insert']
+            array_key_exists('create',$this->settings)
+            && $this->settings['create']
         ) {
             $user = [];
-            $this->mapFields($user, $this->settings['update.'], $userinfo);
+            $this->mapFields($user, $this->settings['create.'], $userinfo);
             $userRepository->createUser($user);
             $user = $userRepository->getUser($username);
             $params['user'] = $user;
