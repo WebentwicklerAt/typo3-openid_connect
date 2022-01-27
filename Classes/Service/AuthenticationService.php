@@ -85,15 +85,14 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
         $isProcessed = static::PROCESS_UNPROCESSED;
         if (
             GeneralUtility::_GP('tx_openidconnect')
-            && in_array(GeneralUtility::_GP('tx_openidconnect'), [
-                static::OIDC_LOGIN,
-                static::OIDC_LOGINRETURN,
-            ])
+            && GeneralUtility::_GP('tx_openidconnect') === static::OIDC_LOGINRETURN
         ) {
+            $originalRedirectUri = GeneralUtility::_GP('tx_openidconnect_redirecturi');
             $settings = GeneralUtility::makeInstance(Settings::class);
             $redirectUri = OpenidConnectUtility::getRedirectUri(
                 static::LOGINTYPE_LOGIN,
-                static::OIDC_LOGINRETURN
+                static::OIDC_LOGINRETURN,
+                $originalRedirectUri
             );
             $settings->setRedirectUri($redirectUri);
             $oidcService = GeneralUtility::makeInstance(OpenidConnectService::class);

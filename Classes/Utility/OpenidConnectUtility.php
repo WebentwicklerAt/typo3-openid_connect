@@ -24,9 +24,14 @@ class OpenidConnectUtility
     /**
      * @param string $loginStatus
      * @param string $loginReturn
+     * @param string|null $originalRedirectUri
      * @return string
      */
-    public static function getRedirectUri(string $loginStatus, string $loginReturn): string
+    public static function getRedirectUri(
+        string $loginStatus,
+        string $loginReturn,
+        ?string $originalRedirectUri = null
+    ): string
     {
         // [scheme]://[host][:[port]]
         $redirectUri = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
@@ -37,13 +42,28 @@ class OpenidConnectUtility
         $query = [];
         if (TYPO3_MODE === 'FE') {
             $query['logintype'] = $loginStatus;
-            $query['tx_openidconnect'] = $loginReturn;
         } else {
             $query['login_status'] = $loginStatus;
-            $query['tx_openidconnect'] = $loginReturn;
+        }
+        $query['tx_openidconnect'] = $loginReturn;
+        if (static::isTrustedRedirectUrl($originalRedirectUri)) {
+            $query['tx_openidconnect_redirecturi'] = $originalRedirectUri;
         }
         $redirectUri .= '?' . http_build_query($query);
         return $redirectUri;
+    }
+
+    /**
+     * @param string|null $redirectUri
+     * @return bool
+     */
+    public static function isTrustedRedirectUrl(?string $redirectUri): bool
+    {
+        if (empty($redirectUri)) {
+            return true;
+        }
+        $redirectUriParts = parse_url($redirectUri);
+        return GeneralUtility::isAllowedHostHeaderValue($redirectUriParts['host']);
     }
 
     /**
