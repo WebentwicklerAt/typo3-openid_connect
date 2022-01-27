@@ -1,0 +1,11 @@
+openidconnect = PAGE
+openidconnect {
+    typeNum = {$plugin.tx_openidconnect.pageType}
+
+    config {
+        admPanel = 0
+        disableAllHeaderCode = 1
+    }
+
+    10 < tt_content.20.list.tx_openidconnect_authentication
+}

@@ -54,10 +54,14 @@ abstract class AbstractAuthenticationServiceHook implements AuthenticationServic
     {
         $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?? [];
         $this->loadTypoScriptSettings();
-        $this->cObj = GeneralUtility::makeInstance(
-            ContentObjectRenderer::class,
-            GeneralUtility::makeInstance(TypoScriptFrontendController::class)
-        );
+        if (!empty($GLOBALS['TSFE'])) {
+            $this->cObj = $GLOBALS['TSFE']->cObj;
+        } else {
+            $this->cObj = GeneralUtility::makeInstance(
+                ContentObjectRenderer::class,
+                GeneralUtility::makeInstance(TypoScriptFrontendController::class)
+            );
+        }
     }
 
     /**

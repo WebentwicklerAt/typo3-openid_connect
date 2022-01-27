@@ -89,4 +89,17 @@ defined('TYPO3_MODE') or die();
             ];
         }
     }
+
+    if ($extensionConfiguration['enableFrontendLogin']) {
+        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+            'WebentwicklerAt.OpenidConnect',
+            'Authentication',
+            [
+                'Authentication' => 'index',
+            ],
+            [
+                'Authentication' => 'index',
+            ]
+        );
+    }
 })();
