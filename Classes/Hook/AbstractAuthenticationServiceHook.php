@@ -16,6 +16,8 @@ namespace WebentwicklerAt\OpenidConnect\Hook;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Configuration\TypoScript\ConditionMatching\ConditionMatcher;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Configuration\Parser\PageTsConfigParser;
@@ -25,8 +27,10 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use WebentwicklerAt\OpenidConnect\Controller\TypoScriptFrontendController;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
 
-abstract class AbstractAuthenticationServiceHook implements AuthenticationServiceHookInterface
+abstract class AbstractAuthenticationServiceHook implements AuthenticationServiceHookInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     const DEFAULT_MAPPING_CONFIGURATION = 'EXT:openid_connect/Configuration/TypoScript/Mapping.typoscript';
 
     const MODE_FE = 'FE';

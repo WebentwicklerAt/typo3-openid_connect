@@ -40,6 +40,13 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
             $userinfo
         );
         $user = $userRepository->getUser($username);
+        $this->logger->debug(
+            sprintf(
+                'OpenID Connect fetched user "%s" with userinfo "%s"',
+                print_r($user, true),
+                print_r($userinfo, true)
+            )
+        );
         if (
             $user
             && array_key_exists('update',$this->settings)
@@ -47,6 +54,12 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
         ) {
             $this->mapFields($user, $this->settings['update.'], $userinfo);
             $userRepository->updateUser($user);
+            $this->logger->debug(
+                sprintf(
+                    'OpenID Connect updated user "%s"',
+                    print_r($user, true)
+                )
+            );
             $user = $userRepository->getUser($username);
             $params['user'] = $user;
         } elseif (
@@ -56,9 +69,21 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
             $user = [];
             $this->mapFields($user, $this->settings['create.'], $userinfo);
             $userRepository->createUser($user);
+            $this->logger->debug(
+                sprintf(
+                    'OpenID Connect created user "%s"',
+                    print_r($user, true)
+                )
+            );
             $user = $userRepository->getUser($username);
             $params['user'] = $user;
         }
+        $this->logger->debug(
+            sprintf(
+                'OpenID Connect returns user "%s"',
+                print_r($params['user'], true),
+            )
+        );
         return $params;
     }
 
@@ -76,6 +101,12 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
         if (is_array($user)) {
             $params['auth'] = AuthenticationService::AUTH_USER_AUTHENTICATED_FINAL;
         }
+        $this->logger->debug(
+            sprintf(
+                'OpenID Connect returns auth "%d"',
+                $params['auth']
+            )
+        );
         return $params;
     }
 }

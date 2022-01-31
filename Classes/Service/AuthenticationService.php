@@ -146,8 +146,8 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
             if ($user) {
                 $this->logger->debug(
                     sprintf(
-                        'OpenID Connect successfully fetched user "%d" with userinfo "%s"',
-                        print_r($user['uid'], true),
+                        'OpenID Connect successfully fetched user "%s" with userinfo "%s"',
+                        print_r($user, true),
                         print_r($this->userinfo, true)
                     )
                 );
