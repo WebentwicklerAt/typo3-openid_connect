@@ -81,7 +81,7 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
         $this->logger->debug(
             sprintf(
                 'OpenID Connect returns user "%s"',
-                print_r($params['user'], true),
+                print_r($params['user'], true)
             )
         );
         return $params;
