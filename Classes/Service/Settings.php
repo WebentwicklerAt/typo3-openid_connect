@@ -119,4 +119,15 @@ class Settings
     {
         return $this->scopes;
     }
+
+    /**
+     * @return array
+     */
+    public function asArray(): array
+    {
+        return [
+            'redirectUri' => $this->redirectUri,
+            'scopes' => $this->scopes,
+        ];
+    }
 }

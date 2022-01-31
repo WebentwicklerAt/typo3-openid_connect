@@ -50,6 +50,11 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
     const AUTH_USER_NOTAUTHENTICATED_FINAL = -1;
 
     /**
+     * @var AbstractUserAuthentication
+     */
+    protected $parentObject;
+
+    /**
      * @var array|null
      */
     protected $userinfo;
@@ -65,6 +70,8 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
     public function initAuth($mode, $loginData, $authInfo, $pObj)
     {
         parent::initAuth($mode, $loginData, $authInfo, $pObj);
+
+        $this->parentObject = $pObj;
     }
 
     /**
@@ -99,6 +106,16 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
             $isAuthenticated = $oidcService->auth($settings);
             if ($isAuthenticated) {
                 $this->userinfo = $oidcService->userinfo();
+                $this->logger->debug(
+                    sprintf(
+                        'Returned from OpenID Connect login with userinfo "%s"',
+                        print_r($this->userinfo, true)
+                    )
+                );
+            } else {
+                $this->logger->error(
+                    'Returned from OpenID Connect with invalid login'
+                );
             }
             $isProcessed = static::PROCESS_PROCESSED_FINAL;
         }
@@ -125,6 +142,22 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
             ];
             foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['getUser'] as $_funcRef) {
                 GeneralUtility::callUserFunction($_funcRef, $_params, $this);
+            }
+            if ($user) {
+                $this->logger->debug(
+                    sprintf(
+                        'OpenID Connect successfully fetched user "%d" with userinfo "%s"',
+                        print_r($user['uid'], true),
+                        print_r($this->userinfo, true)
+                    )
+                );
+            } else {
+                $this->logger->error(
+                    sprintf(
+                        'OpenID Connect failed fetch user with userinfo "%s"',
+                        print_r($this->userinfo, true)
+                    )
+                );
             }
         }
         return $user;
@@ -157,6 +190,23 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
             ];
             foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['authUser'] as $_funcRef) {
                 GeneralUtility::callUserFunction($_funcRef, $_params, $this);
+            }
+            if ($auth === static::AUTH_USER_AUTHENTICATED || $auth === static::AUTH_USER_AUTHENTICATED_FINAL) {
+                $this->logger->debug(
+                    sprintf(
+                        'OpenID Connect login authentication succeeded with status code "%d" with userinfo "%s"',
+                        $auth,
+                        print_r($this->userinfo, true)
+                    )
+                );
+            } else {
+                $this->logger->error(
+                    sprintf(
+                        'OpenID Connect login authentication failed with status code "%d" with userinfo "%s"',
+                        $auth,
+                        print_r($this->userinfo, true)
+                    )
+                );
             }
         }
         return $auth;

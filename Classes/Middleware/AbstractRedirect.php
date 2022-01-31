@@ -20,6 +20,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
@@ -27,8 +29,10 @@ use WebentwicklerAt\OpenidConnect\Service\OpenidConnectService;
 use WebentwicklerAt\OpenidConnect\Service\Settings;
 use WebentwicklerAt\OpenidConnect\Utility\OpenidConnectUtility;
 
-abstract class AbstractRedirect implements MiddlewareInterface
+abstract class AbstractRedirect implements LoggerAwareInterface, MiddlewareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
@@ -50,6 +54,12 @@ abstract class AbstractRedirect implements MiddlewareInterface
                     $originalRedirectUri
                 );
                 $settings->setRedirectUri($redirectUri);
+                $this->logger->debug(
+                    sprintf(
+                        'OpenID Connect login triggered with settings "%s"',
+                        print_r($settings->asArray(), true)
+                    )
+                );
                 $oidcService = GeneralUtility::makeInstance(OpenidConnectService::class);
                 $oidcService->auth($settings);
             } elseif (
@@ -58,7 +68,20 @@ abstract class AbstractRedirect implements MiddlewareInterface
             ) {
                 $originalRedirectUri = $queryParams['tx_openidconnect_redirecturi'];
                 if (OpenidConnectUtility::isTrustedRedirectUrl($originalRedirectUri)) {
+                    $this->logger->debug(
+                        sprintf(
+                            'Returned from OpenID Connect login with trusted redirect uri "%s"',
+                            $originalRedirectUri
+                        )
+                    );
                     HttpUtility::redirect($originalRedirectUri);
+                } else {
+                    $this->logger->error(
+                        sprintf(
+                            'Returned from OpenID Connect login with untrusted redirect uri "%s"',
+                            $originalRedirectUri
+                        )
+                    );
                 }
             }
         }
