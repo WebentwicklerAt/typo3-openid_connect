@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace WebentwicklerAt\OpenidConnect\UserFunc;
+namespace WebentwicklerAt\OpenidConnect\Utility;
 
 /*
  * This file is part of the openid_connect extension for TYPO3 CMS.
@@ -16,19 +16,17 @@ namespace WebentwicklerAt\OpenidConnect\UserFunc;
  * The TYPO3 project - inspiring people to share!
  */
 
-use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
-
-class Misc
+class MiscUtility
 {
     /**
-     * @param string $content
-     * @param array $conf
+     * @param int $length
      * @return string
      * @throws \Exception
      */
-    public function randomString(string $content, array $conf): string
+    public static function randomString(int $length = 32): string
     {
-        $length = !empty($conf['length']) ? (int)$conf['length'] : 32;
-        return MiscUtility::randomString($length);
+        $bytes = random_bytes($length);
+        $hex = bin2hex($bytes);
+        return substr($hex, 0, $length);
     }
 }
