@@ -39,7 +39,7 @@ config.tx_openidconnect {
             update = 0
             update {
                 pid = TEXT
-                pid = 2
+                pid.value = 2
 
                 tstamp = TEXT
                 tstamp.data = date:U
