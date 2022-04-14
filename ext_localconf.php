@@ -101,5 +101,16 @@ defined('TYPO3_MODE') or die();
                 'Authentication' => 'index',
             ]
         );
+
+        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+            'WebentwicklerAt.OpenidConnect',
+            'RedirectToLogin',
+            [
+                'Redirect' => 'toLogin',
+            ],
+            [
+                'Redirect' => 'toLogin',
+            ]
+        );
     }
 })();

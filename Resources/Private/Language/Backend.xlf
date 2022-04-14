@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2022-04-14T07:56:08Z" product-name="openid_connect">
+        <header/>
+        <body>
+            <trans-unit id="plugin.RedirectToLogin.title" xml:space="preserve">
+                <source>OpenID Connect: Redirect to login</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
