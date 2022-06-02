@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+    <file source-language="en" target-language="uk" datatype="plaintext" original="messages" date="2022-06-02T06:37:42Z" product-name="openid_connect">
+        <header/>
+        <body>
+            <trans-unit id="auto_login_provider.login.link" xml:space="preserve">
+                <target>Автоматична реєстрація з OpenID Connect</target>
+            </trans-unit>
+            <trans-unit id="openid_connect_login_provider.login.link" xml:space="preserve">
+                <target>Реєстрація з OpenID Connect</target>
+            </trans-unit>
+            <trans-unit id="openid_connect_login_provider.login.info" xml:space="preserve">
+                <target>Реєстрація з OpenID Connect</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
