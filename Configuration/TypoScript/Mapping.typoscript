@@ -1,11 +1,17 @@
 config.tx_openidconnect {
     settings {
         BE {
+            pidList = TEXT
+            pidList.value = 0
+
             username = TEXT
             username.field = preferred_username
 
             update = 0
             update {
+                pid = TEXT
+                pid.value = 0
+
                 tstamp = TEXT
                 tstamp.data = date:U
 
@@ -33,6 +39,9 @@ config.tx_openidconnect {
         }
 
         FE {
+            pidList = TEXT
+            pidList.value = 2
+
             username = TEXT
             username.field = preferred_username
 

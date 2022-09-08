@@ -34,12 +34,17 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
         $userinfo = $params['userinfo'];
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = $params['userRepository'];
+        $pidList = $this->mapField(
+            $this->settings['pidList'],
+            $this->settings['pidList.'],
+            $userinfo
+        );
         $username = $this->mapField(
             $this->settings['username'],
             $this->settings['username.'],
             $userinfo
         );
-        $user = $userRepository->getUser($username);
+        $user = $userRepository->getUser($pidList, $username);
         $this->logger->debug(
             sprintf(
                 'OpenID Connect fetched user "%s" with userinfo "%s"',
@@ -60,7 +65,7 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
                     print_r($user, true)
                 )
             );
-            $user = $userRepository->getUser($username);
+            $user = $userRepository->getUser($pidList, $username);
             $params['user'] = $user;
         } elseif (
             array_key_exists('create',$this->settings)
@@ -75,7 +80,7 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
                     print_r($user, true)
                 )
             );
-            $user = $userRepository->getUser($username);
+            $user = $userRepository->getUser($pidList, $username);
             $params['user'] = $user;
         }
         $this->logger->debug(

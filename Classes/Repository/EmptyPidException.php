@@ -16,11 +16,6 @@ namespace WebentwicklerAt\OpenidConnect\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
-interface UserRepositoryInterface
+class EmptyPidException extends \Exception
 {
-    public function getUser(string $pidList, string $username);
-
-    public function createUser(array $user);
-
-    public function updateUser(array $user);
 }

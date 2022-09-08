@@ -16,6 +16,7 @@ namespace WebentwicklerAt\OpenidConnect\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -23,13 +24,19 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 abstract class AbstractUserRepository implements UserRepositoryInterface
 {
     /**
+     * @param string $pidList
      * @param string $username
      * @return false|array
      * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws EmptyPidListException
      * @throws EmptyUsernameException
      */
-    public function getUser(string $username)
+    public function getUser(string $pidList, string $username)
     {
+        $pidArray = GeneralUtility::intExplode(',', $pidList, true);
+        if (empty($pidArray)) {
+            throw new EmptyPidListException('PidList must not be empty!', 1662643718);
+        }
         if (empty($username)) {
             throw new EmptyUsernameException('Username must not be empty!', 1643694736);
         }
@@ -38,6 +45,10 @@ abstract class AbstractUserRepository implements UserRepositoryInterface
             ->select('*')
             ->from($this->tableName)
             ->where(
+                $queryBuilder->expr()->in(
+                    'pid',
+                    $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)
+                ),
                 $queryBuilder->expr()->eq(
                     'username',
                     $queryBuilder->createNamedParameter($username)
@@ -50,11 +61,15 @@ abstract class AbstractUserRepository implements UserRepositoryInterface
     /**
      * @param array $user
      * @return void
+     * @throws EmptyPidException
      * @throws EmptyUsernameException
      * @throws EmptyPasswordException
      */
     public function createUser(array $user): void
     {
+        if (!isset($user['pid'])) {
+            throw new EmptyPidException('Pid must not be empty!', 1662643761);
+        }
         if (empty($user['username'])) {
             throw new EmptyUsernameException('Username must not be empty!', 1643694776);
         }
