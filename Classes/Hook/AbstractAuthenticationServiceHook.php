@@ -21,6 +21,7 @@ use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Configuration\TypoScript\ConditionMatching\ConditionMatcher;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Configuration\Parser\PageTsConfigParser;
+use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
@@ -65,6 +66,8 @@ abstract class AbstractAuthenticationServiceHook implements AuthenticationServic
                 ContentObjectRenderer::class,
                 GeneralUtility::makeInstance(TypoScriptFrontendController::class)
             );
+            $request = ServerRequestFactory::fromGlobals();
+            $this->cObj->setRequest($request);
         }
     }
 
