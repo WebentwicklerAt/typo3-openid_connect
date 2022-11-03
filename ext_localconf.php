@@ -1,4 +1,8 @@
 <?php
+
+use WebentwicklerAt\OpenidConnect\Controller\AuthenticationController;
+use WebentwicklerAt\OpenidConnect\Controller\RedirectController;
+
 defined('TYPO3_MODE') or die();
 
 (function () {
@@ -92,24 +96,24 @@ defined('TYPO3_MODE') or die();
 
     if ($extensionConfiguration['enableFrontendLogin']) {
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-            'WebentwicklerAt.OpenidConnect',
+            'OpenidConnect',
             'Authentication',
             [
-                'Authentication' => 'index',
+                AuthenticationController::class => 'index',
             ],
             [
-                'Authentication' => 'index',
+                AuthenticationController::class => 'index',
             ]
         );
 
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-            'WebentwicklerAt.OpenidConnect',
+            'OpenidConnect',
             'RedirectToLogin',
             [
-                'Redirect' => 'toLogin',
+                RedirectController::class => 'toLogin',
             ],
             [
-                'Redirect' => 'toLogin',
+                RedirectController::class => 'toLogin',
             ]
         );
     }
