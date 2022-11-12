@@ -17,6 +17,7 @@ namespace WebentwicklerAt\OpenidConnect\Utility;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
 use function Jumbojett\base64url_decode;
 
 class OpenidConnectUtility
@@ -40,10 +41,19 @@ class OpenidConnectUtility
         $redirectUri .= $requestUri['path'];
         // ?[query]
         $query = [];
-        if (TYPO3_MODE === 'FE') {
-            $query['logintype'] = $loginStatus;
-        } else {
-            $query['login_status'] = $loginStatus;
+        if (
+            in_array($loginReturn,
+            [
+                AuthenticationService::OIDC_LOGINRETURN,
+                AuthenticationService::OIDC_LOGOUTRETURN,
+            ])
+        ) {
+            // trigger login service after return from authentication server only
+            if (TYPO3_MODE === 'FE') {
+                $query['logintype'] = $loginStatus;
+            } else {
+                $query['login_status'] = $loginStatus;
+            }
         }
         $query['tx_openidconnect'] = $loginReturn;
         if (static::isTrustedRedirectUrl($originalRedirectUri)) {
