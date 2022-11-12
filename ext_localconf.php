@@ -95,10 +95,10 @@ defined('TYPO3_MODE') or die();
             'WebentwicklerAt.OpenidConnect',
             'Authentication',
             [
-                'Authentication' => 'index',
+                \WebentwicklerAt\OpenidConnect\Controller\AuthenticationController::class => 'index',
             ],
             [
-                'Authentication' => 'index',
+                \WebentwicklerAt\OpenidConnect\Controller\AuthenticationController::class => 'index',
             ]
         );
 
@@ -106,10 +106,10 @@ defined('TYPO3_MODE') or die();
             'WebentwicklerAt.OpenidConnect',
             'RedirectToLogin',
             [
-                'Redirect' => 'toLogin',
+                \WebentwicklerAt\OpenidConnect\Controller\RedirectController::class => 'toLogin',
             ],
             [
-                'Redirect' => 'toLogin',
+                \WebentwicklerAt\OpenidConnect\Controller\RedirectController::class => 'toLogin',
             ]
         );
     }
