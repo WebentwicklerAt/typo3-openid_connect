@@ -22,8 +22,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\HttpUtility;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
 use WebentwicklerAt\OpenidConnect\Service\OpenidConnectService;
 use WebentwicklerAt\OpenidConnect\Service\Settings;
@@ -74,7 +74,7 @@ abstract class AbstractRedirect implements LoggerAwareInterface, MiddlewareInter
                             $originalRedirectUri
                         )
                     );
-                    HttpUtility::redirect($originalRedirectUri);
+                    return new RedirectResponse($originalRedirectUri);
                 } else {
                     $this->logger->error(
                         sprintf(
