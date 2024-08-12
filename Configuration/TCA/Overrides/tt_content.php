@@ -5,7 +5,7 @@ defined('TYPO3') or die();
 
 (function () {
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-        'WebentwicklerAt.OpenidConnect',
+        'OpenidConnect',
         'RedirectToLogin',
         'LLL:EXT:openid_connect/Resources/Private/Language/Backend.xlf:plugin.RedirectToLogin.title'
     );
