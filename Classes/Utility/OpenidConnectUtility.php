@@ -17,23 +17,31 @@ namespace WebentwicklerAt\OpenidConnect\Utility;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WebentwicklerAt\OpenidConnect\Exception\InvalidModeException;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
 use function Jumbojett\base64url_decode;
 
 class OpenidConnectUtility
 {
+
+
     /**
+     * @param string $mode
      * @param string $loginStatus
      * @param string $loginReturn
      * @param string|null $originalRedirectUri
      * @return string
      */
     public static function getRedirectUri(
+        string $mode,
         string $loginStatus,
         string $loginReturn,
         ?string $originalRedirectUri = null
     ): string
     {
+        if (!MiscUtility::isValidMode($mode)) {
+            throw new InvalidModeException('Mode has to be "FE" or "BE", but "' . $mode . '" given.', 1723441364);
+        }
         // [scheme]://[host][:[port]]
         $redirectUri = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
         // [path]
@@ -49,7 +57,7 @@ class OpenidConnectUtility
             ])
         ) {
             // trigger login service after return from authentication server only
-            if (TYPO3_MODE === 'FE') {
+            if ($mode === MiscUtility::MODE_FE) {
                 $query['logintype'] = $loginStatus;
             } else {
                 $query['login_status'] = $loginStatus;

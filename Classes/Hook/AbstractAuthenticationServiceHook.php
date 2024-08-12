@@ -16,26 +16,26 @@ namespace WebentwicklerAt\OpenidConnect\Hook;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Configuration\TypoScript\ConditionMatching\ConditionMatcher;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Configuration\Parser\PageTsConfigParser;
+use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use WebentwicklerAt\OpenidConnect\Controller\TypoScriptFrontendController;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
+use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
 
 abstract class AbstractAuthenticationServiceHook implements AuthenticationServiceHookInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    const DEFAULT_MAPPING_CONFIGURATION = 'EXT:openid_connect/Configuration/TypoScript/Mapping.typoscript';
-
-    const MODE_FE = 'FE';
-    const MODE_BE = 'BE';
+    public const DEFAULT_MAPPING_CONFIGURATION = 'EXT:openid_connect/Configuration/TypoScript/Mapping.typoscript';
 
     /**
      * @var array
@@ -58,7 +58,6 @@ abstract class AbstractAuthenticationServiceHook implements AuthenticationServic
     public function __construct()
     {
         $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?? [];
-        $this->loadTypoScriptSettings();
         if (!empty($GLOBALS['TSFE'])) {
             $this->cObj = $GLOBALS['TSFE']->cObj;
         } else {
@@ -92,10 +91,11 @@ abstract class AbstractAuthenticationServiceHook implements AuthenticationServic
     ): array;
 
     /**
+     * @param AuthenticationService $authenticationService
      * @return void
      * @throws \TYPO3\CMS\Core\Cache\Exception\NoSuchCacheException
      */
-    protected function loadTypoScriptSettings()
+    protected function loadTypoScriptSettings(AuthenticationService $authenticationService)
     {
         $filename = $this->extensionConfiguration['mappingConfiguration'] ?? static::DEFAULT_MAPPING_CONFIGURATION;
         $url = GeneralUtility::getFileAbsFileName($filename);
@@ -107,7 +107,7 @@ abstract class AbstractAuthenticationServiceHook implements AuthenticationServic
         );
         $matcher = GeneralUtility::makeInstance(ConditionMatcher::class);
         $typoScript = $parser->parse($content, $matcher);
-        $mode = (TYPO3_MODE === 'FE') ? static::MODE_FE : static::MODE_BE;
+        $mode = MiscUtility::getModeFromAuthenticationServiceSubtype($authenticationService->mode);
         $this->settings = $typoScript['config.']['tx_openidconnect.']['settings.'][$mode . '.'];
     }
 

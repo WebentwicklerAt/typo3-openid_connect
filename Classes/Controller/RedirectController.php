@@ -19,6 +19,7 @@ namespace WebentwicklerAt\OpenidConnect\Controller;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
+use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
 use WebentwicklerAt\OpenidConnect\Utility\OpenidConnectUtility;
 
 class RedirectController extends ActionController
@@ -30,6 +31,7 @@ class RedirectController extends ActionController
     {
         $originalRedirectUri = GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL');
         $redirectUri = OpenidConnectUtility::getRedirectUri(
+            MiscUtility::MODE_FE,
             AuthenticationService::LOGINTYPE_LOGIN,
             AuthenticationService::OIDC_LOGIN,
             $originalRedirectUri

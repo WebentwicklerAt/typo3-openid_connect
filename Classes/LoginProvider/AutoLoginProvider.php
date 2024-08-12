@@ -23,11 +23,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
+use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
 use WebentwicklerAt\OpenidConnect\Utility\OpenidConnectUtility;
 
 class AutoLoginProvider extends AbstractLoginProvider implements LoginProviderInterface
 {
-    const LOGIN_PROVIDER_KEY = 1433416748;
+    public const LOGIN_PROVIDER_KEY = 1433416748;
 
     /**
      * @param StandaloneView $view
@@ -45,6 +46,7 @@ class AutoLoginProvider extends AbstractLoginProvider implements LoginProviderIn
             && GeneralUtility::_GET('login_status') === null
         ) {
             $redirectUri = OpenidConnectUtility::getRedirectUri(
+                MiscUtility::MODE_BE,
                 AuthenticationService::LOGINTYPE_LOGIN,
                 AuthenticationService::OIDC_LOGIN
             );

@@ -16,8 +16,13 @@ namespace WebentwicklerAt\OpenidConnect\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
+use WebentwicklerAt\OpenidConnect\Exception\InvalidModeException;
+
 class MiscUtility
 {
+    public const MODE_FE = 'FE';
+    public const MODE_BE = 'BE';
+
     /**
      * @param int $length
      * @return string
@@ -28,5 +33,28 @@ class MiscUtility
         $bytes = random_bytes($length);
         $hex = bin2hex($bytes);
         return substr($hex, 0, $length);
+    }
+
+    /**
+     * @param string $authenticationServiceSubtype
+     * @return string
+     * @throws InvalidModeException
+     */
+    public static function getModeFromAuthenticationServiceSubtype(string $authenticationServiceSubtype): string
+    {
+        $mode = substr($authenticationServiceSubtype, -2);
+        if (!static::isValidMode($mode)) {
+            throw new InvalidModeException('Mode has to be "FE" or "BE", but "' . $mode . '" given.', 1723441307);
+        }
+        return $mode;
+    }
+
+    /**
+     * @param string $mode
+     * @return bool
+     */
+    public static function isValidMode(string $mode): bool
+    {
+        return in_array($mode, [static::MODE_FE, static::MODE_BE], true);
     }
 }

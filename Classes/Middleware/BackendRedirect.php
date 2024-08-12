@@ -17,7 +17,12 @@ namespace WebentwicklerAt\OpenidConnect\Middleware;
  */
 
 use Psr\Http\Server\MiddlewareInterface;
+use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
 
 class BackendRedirect extends AbstractRedirect implements MiddlewareInterface
 {
+    /**
+     * @var string
+     */
+    protected $mode = MiscUtility::MODE_BE;
 }

@@ -34,6 +34,11 @@ abstract class AbstractRedirect implements LoggerAwareInterface, MiddlewareInter
     use LoggerAwareTrait;
 
     /**
+     * @var string
+     */
+    protected $mode;
+
+    /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
@@ -49,6 +54,7 @@ abstract class AbstractRedirect implements LoggerAwareInterface, MiddlewareInter
                 }
                 $settings = GeneralUtility::makeInstance(Settings::class);
                 $redirectUri = OpenidConnectUtility::getRedirectUri(
+                    $this->mode,
                     AuthenticationService::LOGINTYPE_LOGIN,
                     AuthenticationService::OIDC_LOGINRETURN,
                     $originalRedirectUri

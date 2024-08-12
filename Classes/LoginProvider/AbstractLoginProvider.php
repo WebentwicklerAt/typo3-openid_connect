@@ -25,7 +25,7 @@ use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
 
 abstract class AbstractLoginProvider implements LoginProviderInterface
 {
-    const DEFAULT_TEMPLATE = 'EXT:openid_connect/Resources/Private/Templates/Backend/Login.html';
+    public const DEFAULT_TEMPLATE = 'EXT:openid_connect/Resources/Private/Templates/Backend/Login.html';
 
     /**
      * @var array

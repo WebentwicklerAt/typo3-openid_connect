@@ -31,6 +31,7 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
         AuthenticationService $authenticationService
     ): array
     {
+        $this->loadTypoScriptSettings($authenticationService);
         $userinfo = $params['userinfo'];
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = $params['userRepository'];
@@ -102,6 +103,7 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
         AuthenticationService $authenticationService
     ): array
     {
+        $this->loadTypoScriptSettings($authenticationService);
         $user = $params['user'];
         if (is_array($user)) {
             $params['auth'] = AuthenticationService::AUTH_USER_AUTHENTICATED_FINAL;

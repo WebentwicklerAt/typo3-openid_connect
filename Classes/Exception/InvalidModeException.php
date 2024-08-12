@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 
-namespace WebentwicklerAt\OpenidConnect\LoginProvider;
+declare(strict_types=1);
 
 /*
  * This file is part of the openid_connect extension for TYPO3 CMS.
@@ -16,9 +15,8 @@ namespace WebentwicklerAt\OpenidConnect\LoginProvider;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Backend\LoginProvider\LoginProviderInterface;
+namespace WebentwicklerAt\OpenidConnect\Exception;
 
-class OpenidConnectLoginProvider extends AbstractLoginProvider implements LoginProviderInterface
+class InvalidModeException extends \Exception
 {
-    public const LOGIN_PROVIDER_KEY = 1642422526;
 }

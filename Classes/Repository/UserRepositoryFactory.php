@@ -17,15 +17,21 @@ namespace WebentwicklerAt\OpenidConnect\Repository;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WebentwicklerAt\OpenidConnect\Exception\InvalidModeException;
+use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
 
 final class UserRepositoryFactory
 {
     /**
+     * @param string $mode
      * @return UserRepositoryInterface
      */
-    public static function getInstance(): UserRepositoryInterface
+    public static function getInstance(string $mode): UserRepositoryInterface
     {
-        if (TYPO3_MODE === 'FE') {
+        if (!MiscUtility::isValidMode($mode)) {
+            throw new InvalidModeException('Mode has to be "FE" or "BE", but "' . $mode . '" given.', 1723441536);
+        }
+        if ($mode === MiscUtility::MODE_FE) {
             $instance = GeneralUtility::makeInstance(FrontendUserRepository::class);
         } else {
             $instance = GeneralUtility::makeInstance(BackendUserRepository::class);

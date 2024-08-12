@@ -23,6 +23,7 @@ use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WebentwicklerAt\OpenidConnect\Repository\UserRepositoryFactory;
+use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
 use WebentwicklerAt\OpenidConnect\Utility\OpenidConnectUtility;
 
 /**
@@ -32,22 +33,22 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
 {
     use LoggerAwareTrait;
 
-    const LOGINTYPE_LOGIN = 'login';
-    const LOGINTYPE_LOGOUT = 'logout';
+    public const LOGINTYPE_LOGIN = 'login';
+    public const LOGINTYPE_LOGOUT = 'logout';
 
-    const OIDC_LOGIN = 'login';
-    const OIDC_LOGINRETURN = 'loginreturn';
-    const OIDC_LOGOUT = 'logout';
-    const OIDC_LOGOUTRETURN = 'logoutreturn';
+    public const OIDC_LOGIN = 'login';
+    public const OIDC_LOGINRETURN = 'loginreturn';
+    public const OIDC_LOGOUT = 'logout';
+    public const OIDC_LOGOUTRETURN = 'logoutreturn';
 
-    const PROCESS_PROCESSED = true;
-    const PROCESS_PROCESSED_FINAL = 200;
-    const PROCESS_UNPROCESSED = false;
+    public const PROCESS_PROCESSED = true;
+    public const PROCESS_PROCESSED_FINAL = 200;
+    public const PROCESS_UNPROCESSED = false;
 
-    const AUTH_USER_AUTHENTICATED_FINAL = 200;
-    const AUTH_USER_NOTAUTHENTICATED = 100;
-    const AUTH_USER_AUTHENTICATED = 0;
-    const AUTH_USER_NOTAUTHENTICATED_FINAL = -1;
+    public const AUTH_USER_AUTHENTICATED_FINAL = 200;
+    public const AUTH_USER_NOTAUTHENTICATED = 100;
+    public const AUTH_USER_AUTHENTICATED = 0;
+    public const AUTH_USER_NOTAUTHENTICATED_FINAL = -1;
 
     /**
      * @var AbstractUserAuthentication
@@ -96,7 +97,9 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
         ) {
             $originalRedirectUri = GeneralUtility::_GP('tx_openidconnect_redirecturi');
             $settings = GeneralUtility::makeInstance(Settings::class);
+            $mode = MiscUtility::getModeFromAuthenticationServiceSubtype($this->mode);
             $redirectUri = OpenidConnectUtility::getRedirectUri(
+                $mode,
                 static::LOGINTYPE_LOGIN,
                 static::OIDC_LOGINRETURN,
                 $originalRedirectUri
@@ -135,10 +138,11 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
             && is_array($this->userinfo)
             && count($this->userinfo)
         ) {
+            $mode = MiscUtility::getModeFromAuthenticationServiceSubtype($this->mode);
             $_params = [
                 'user' => &$user,
                 'userinfo' => $this->userinfo,
-                'userRepository' => UserRepositoryFactory::getInstance(),
+                'userRepository' => UserRepositoryFactory::getInstance($mode),
             ];
             foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['getUser'] as $_funcRef) {
                 GeneralUtility::callUserFunction($_funcRef, $_params, $this);
