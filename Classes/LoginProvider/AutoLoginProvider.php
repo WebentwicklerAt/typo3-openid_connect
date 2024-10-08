@@ -18,9 +18,10 @@ namespace WebentwicklerAt\OpenidConnect\LoginProvider;
 
 use TYPO3\CMS\Backend\Controller\LoginController;
 use TYPO3\CMS\Backend\LoginProvider\LoginProviderInterface;
+use TYPO3\CMS\Core\Http\PropagateResponseException;
+use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
 use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
@@ -50,7 +51,8 @@ class AutoLoginProvider extends AbstractLoginProvider implements LoginProviderIn
                 AuthenticationService::LOGINTYPE_LOGIN,
                 AuthenticationService::OIDC_LOGIN
             );
-            HttpUtility::redirect($redirectUri);
+            $response = new RedirectResponse($redirectUri, 303);
+            throw new PropagateResponseException($response, 1723447030);
         }
         parent::render($view, $pageRenderer, $loginController);
     }

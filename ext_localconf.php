@@ -75,7 +75,7 @@ defined('TYPO3') or die();
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][$openidConnectLoginProviderKey] = [
             'provider' => \WebentwicklerAt\OpenidConnect\LoginProvider\OpenidConnectLoginProvider::class,
             'sorting' => 25,
-            'icon-class' => 'fa-openid',
+            'iconIdentifier' => 'tx-openidconnect-openid',
             'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:openid_connect_login_provider.login.link'
         ];
 
@@ -84,7 +84,7 @@ defined('TYPO3') or die();
             $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][$autoLoginProviderKey] = [
                 'provider' => \WebentwicklerAt\OpenidConnect\LoginProvider\AutoLoginProvider::class,
                 'sorting' => 100,
-                'icon-class' => 'fa-link',
+                'iconIdentifier' => 'tx-openidconnect-link',
                 'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:auto_login_provider.login.link'
             ];
         }
