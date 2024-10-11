@@ -16,6 +16,7 @@ namespace WebentwicklerAt\OpenidConnect\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Middleware\VerifyHostHeader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WebentwicklerAt\OpenidConnect\Exception\InvalidModeException;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
@@ -81,7 +82,17 @@ class OpenidConnectUtility
             return true;
         }
         $redirectUriParts = parse_url($redirectUri);
-        return GeneralUtility::isAllowedHostHeaderValue($redirectUriParts['host']);
+        return static::isAllowedHostHeaderValue($redirectUriParts['host']);
+    }
+
+    /**
+     * @param string $hostHeaderValue
+     * @return bool
+     */
+    protected static function isAllowedHostHeaderValue(string $hostHeaderValue): bool
+    {
+        $verifyHostHeader = new VerifyHostHeader($GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] ?? '');
+        return $verifyHostHeader->isAllowedHostHeaderValue($hostHeaderValue, $_SERVER);
     }
 
     /**
