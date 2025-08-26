@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Hook;
@@ -21,16 +22,10 @@ use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
 
 class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
 {
-    /**
-     * @param array $params
-     * @param AuthenticationService $authenticationService
-     * @return array
-     */
     public function getUser(
         array $params,
         AuthenticationService $authenticationService
-    ): array
-    {
+    ): array {
         $this->loadTypoScriptSettings($authenticationService);
         $userinfo = $params['userinfo'];
         /** @var UserRepositoryInterface $userRepository */
@@ -55,7 +50,7 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
         );
         if (
             $user
-            && array_key_exists('update',$this->settings)
+            && array_key_exists('update', $this->settings)
             && $this->settings['update']
         ) {
             $this->mapFields($user, $this->settings['update.'], $userinfo);
@@ -69,7 +64,7 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
             $user = $userRepository->getUser($pidList, $username);
             $params['user'] = $user;
         } elseif (
-            array_key_exists('create',$this->settings)
+            array_key_exists('create', $this->settings)
             && $this->settings['create']
         ) {
             $user = [];
@@ -93,16 +88,10 @@ class AuthenticationServiceHook extends AbstractAuthenticationServiceHook
         return $params;
     }
 
-    /**
-     * @param array $params
-     * @param AuthenticationService $authenticationService
-     * @return array
-     */
     public function authUser(
         array $params,
         AuthenticationService $authenticationService
-    ): array
-    {
+    ): array {
         $this->loadTypoScriptSettings($authenticationService);
         $user = $params['user'];
         if (is_array($user)) {

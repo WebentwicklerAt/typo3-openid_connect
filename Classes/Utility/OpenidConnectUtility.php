@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Utility;
@@ -20,26 +21,17 @@ use TYPO3\CMS\Core\Middleware\VerifyHostHeader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WebentwicklerAt\OpenidConnect\Exception\InvalidModeException;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
-use function Jumbojett\base64url_decode;
+
+use function Jumbojett\base64url_decode; // @phpstan-ignore-line
 
 class OpenidConnectUtility
 {
-
-
-    /**
-     * @param string $mode
-     * @param string $loginStatus
-     * @param string $loginReturn
-     * @param string|null $originalRedirectUri
-     * @return string
-     */
     public static function getRedirectUri(
         string $mode,
         string $loginStatus,
         string $loginReturn,
         ?string $originalRedirectUri = null
-    ): string
-    {
+    ): string {
         if (!MiscUtility::isValidMode($mode)) {
             throw new InvalidModeException('Mode has to be "FE" or "BE", but "' . $mode . '" given.', 1723441364);
         }
@@ -51,11 +43,13 @@ class OpenidConnectUtility
         // ?[query]
         $query = [];
         if (
-            in_array($loginReturn,
-            [
-                AuthenticationService::OIDC_LOGINRETURN,
-                AuthenticationService::OIDC_LOGOUTRETURN,
-            ])
+            in_array(
+                $loginReturn,
+                [
+                    AuthenticationService::OIDC_LOGINRETURN,
+                    AuthenticationService::OIDC_LOGOUTRETURN,
+                ]
+            )
         ) {
             // trigger login service after return from authentication server only
             if ($mode === MiscUtility::MODE_FE) {
@@ -72,10 +66,6 @@ class OpenidConnectUtility
         return $redirectUri;
     }
 
-    /**
-     * @param string|null $redirectUri
-     * @return bool
-     */
     public static function isTrustedRedirectUrl(?string $redirectUri): bool
     {
         if (empty($redirectUri)) {
@@ -85,20 +75,12 @@ class OpenidConnectUtility
         return static::isAllowedHostHeaderValue($redirectUriParts['host']);
     }
 
-    /**
-     * @param string $hostHeaderValue
-     * @return bool
-     */
     protected static function isAllowedHostHeaderValue(string $hostHeaderValue): bool
     {
         $verifyHostHeader = new VerifyHostHeader($GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] ?? '');
         return $verifyHostHeader->isAllowedHostHeaderValue($hostHeaderValue, $_SERVER);
     }
 
-    /**
-     * @param array $query
-     * @return array
-     */
     public static function removeOpenidConnectQueryParameter(array $query): array
     {
         if (array_key_exists('state', $query)) {
@@ -113,16 +95,13 @@ class OpenidConnectUtility
         return $query;
     }
 
-    /**
-     * @param string $jwt
-     * @return array
-     */
     public static function decodeJwt(string $jwt): array
     {
         $data = [];
         [$data['header'], $data['payload'], $data['signature']] = explode('.', $jwt);
         foreach ($data as $key => $value) {
-            $data[$key] = json_decode(base64url_decode($value));
+            $json = base64url_decode($value); // @phpstan-ignore-line
+            $data[$key] = json_decode($json);
         }
         return $data;
     }

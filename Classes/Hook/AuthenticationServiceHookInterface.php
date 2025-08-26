@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Hook;
@@ -20,21 +21,11 @@ use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
 
 interface AuthenticationServiceHookInterface
 {
-    /**
-     * @param array $params
-     * @param AuthenticationService $authenticationService
-     * @return array
-     */
     public function getUser(
         array $params,
         AuthenticationService $authenticationService
     ): array;
 
-    /**
-     * @param array $params
-     * @param AuthenticationService $authenticationService
-     * @return array
-     */
     public function authUser(
         array $params,
         AuthenticationService $authenticationService

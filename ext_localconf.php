@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3') or die();
 
 (function () {
@@ -34,7 +35,7 @@ defined('TYPO3') or die();
                 'quality' => 50,
                 'os' => '',
                 'exec' => '',
-                'className' => \WebentwicklerAt\OpenidConnect\Service\AuthenticationService::class
+                'className' => \WebentwicklerAt\OpenidConnect\Service\AuthenticationService::class,
             ]
         );
     }
@@ -54,7 +55,7 @@ defined('TYPO3') or die();
                 'quality' => 50,
                 'os' => '',
                 'exec' => '',
-                'className' => \WebentwicklerAt\OpenidConnect\Service\AuthenticationService::class
+                'className' => \WebentwicklerAt\OpenidConnect\Service\AuthenticationService::class,
             ]
         );
 
@@ -76,7 +77,7 @@ defined('TYPO3') or die();
             'provider' => \WebentwicklerAt\OpenidConnect\LoginProvider\OpenidConnectLoginProvider::class,
             'sorting' => 25,
             'iconIdentifier' => 'tx-openidconnect-openid',
-            'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:openid_connect_login_provider.login.link'
+            'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:openid_connect_login_provider.login.link',
         ];
 
         if ($extensionConfiguration['enableBackendAutoLogin']) {
@@ -85,7 +86,7 @@ defined('TYPO3') or die();
                 'provider' => \WebentwicklerAt\OpenidConnect\LoginProvider\AutoLoginProvider::class,
                 'sorting' => 100,
                 'iconIdentifier' => 'tx-openidconnect-link',
-                'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:auto_login_provider.login.link'
+                'label' => 'LLL:EXT:openid_connect/Resources/Private/Language/locallang.xlf:auto_login_provider.login.link',
             ];
         }
     }

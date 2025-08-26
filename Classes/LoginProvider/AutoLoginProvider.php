@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\LoginProvider;
@@ -16,12 +17,12 @@ namespace WebentwicklerAt\OpenidConnect\LoginProvider;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Controller\LoginController;
 use TYPO3\CMS\Backend\LoginProvider\LoginProviderInterface;
 use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Page\PageRenderer;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
 use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
@@ -31,29 +32,31 @@ class AutoLoginProvider extends AbstractLoginProvider implements LoginProviderIn
 {
     public const LOGIN_PROVIDER_KEY = 1433416748;
 
-    /**
-     * @param StandaloneView $view
-     * @param PageRenderer $pageRenderer
-     * @param LoginController $loginController
-     */
     public function render(
         StandaloneView $view,
         PageRenderer $pageRenderer,
-        LoginController $loginController
-    )
-    {
+        LoginController $loginController,
+    ) {
+        $request = $this->getRequest();
+        $autologin = $request->getQueryParams()['autologin'] ?? null;
+        $loginStatus = $request->getQueryParams()['login_status'] ?? null;
         if (
-            GeneralUtility::_GET('autologin') !== '0'
-            && GeneralUtility::_GET('login_status') === null
+            $autologin !== '0'
+            && $loginStatus === null
         ) {
             $redirectUri = OpenidConnectUtility::getRedirectUri(
                 MiscUtility::MODE_BE,
                 AuthenticationService::LOGINTYPE_LOGIN,
-                AuthenticationService::OIDC_LOGIN
+                AuthenticationService::OIDC_LOGIN,
             );
             $response = new RedirectResponse($redirectUri, 303);
             throw new PropagateResponseException($response, 1723447030);
         }
         parent::render($view, $pageRenderer, $loginController);
+    }
+
+    private function getRequest(): ServerRequestInterface
+    {
+        return $GLOBALS['TYPO3_REQUEST'];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Middleware;
@@ -33,16 +34,8 @@ abstract class AbstractRedirect implements LoggerAwareInterface, MiddlewareInter
 {
     use LoggerAwareTrait;
 
-    /**
-     * @var string
-     */
-    protected $mode;
+    protected string $mode = '';
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $queryParams = $request->getQueryParams();
@@ -81,14 +74,14 @@ abstract class AbstractRedirect implements LoggerAwareInterface, MiddlewareInter
                         )
                     );
                     return new RedirectResponse($originalRedirectUri);
-                } else {
-                    $this->logger->error(
-                        sprintf(
-                            'Returned from OpenID Connect login with untrusted redirect uri "%s"',
-                            $originalRedirectUri
-                        )
-                    );
                 }
+                $this->logger->error(
+                    sprintf(
+                        'Returned from OpenID Connect login with untrusted redirect uri "%s"',
+                        $originalRedirectUri
+                    )
+                );
+
             }
         }
         return $handler->handle($request);

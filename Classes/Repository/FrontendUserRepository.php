@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Repository;
@@ -18,8 +19,5 @@ namespace WebentwicklerAt\OpenidConnect\Repository;
 
 class FrontendUserRepository extends AbstractUserRepository implements UserRepositoryInterface
 {
-    /**
-     * @var string
-     */
-    protected $tableName = 'fe_users';
+    protected string $tableName = 'fe_users';
 }

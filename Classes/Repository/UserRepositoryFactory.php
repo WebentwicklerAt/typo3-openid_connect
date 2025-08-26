@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Repository;
@@ -22,10 +23,6 @@ use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
 
 final class UserRepositoryFactory
 {
-    /**
-     * @param string $mode
-     * @return UserRepositoryInterface
-     */
     public static function getInstance(string $mode): UserRepositoryInterface
     {
         if (!MiscUtility::isValidMode($mode)) {

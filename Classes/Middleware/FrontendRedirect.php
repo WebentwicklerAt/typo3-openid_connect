@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Middleware;
@@ -21,8 +22,5 @@ use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
 
 class FrontendRedirect extends AbstractRedirect implements MiddlewareInterface
 {
-    /**
-     * @var string
-     */
-    protected $mode = MiscUtility::MODE_FE;
+    protected string $mode = MiscUtility::MODE_FE;
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Repository;
@@ -16,18 +17,20 @@ namespace WebentwicklerAt\OpenidConnect\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\ArrayParameterType;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 abstract class AbstractUserRepository implements UserRepositoryInterface
 {
+    protected string $tableName = '';
+
     /**
-     * @param string $pidList
-     * @param string $username
      * @return false|array
-     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
      * @throws EmptyPidListException
      * @throws EmptyUsernameException
      */
@@ -47,20 +50,18 @@ abstract class AbstractUserRepository implements UserRepositoryInterface
             ->where(
                 $queryBuilder->expr()->in(
                     'pid',
-                    $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)
+                    $queryBuilder->createNamedParameter($pidArray, ArrayParameterType::INTEGER)
                 ),
                 $queryBuilder->expr()->eq(
                     'username',
                     $queryBuilder->createNamedParameter($username)
                 )
             );
-        $statement = $queryBuilder->execute();
+        $statement = $queryBuilder->executeQuery();
         return $statement->fetchAssociative();
     }
 
     /**
-     * @param array $user
-     * @return void
      * @throws EmptyPidException
      * @throws EmptyUsernameException
      * @throws EmptyPasswordException
@@ -80,12 +81,10 @@ abstract class AbstractUserRepository implements UserRepositoryInterface
         $queryBuilder
             ->insert($this->tableName)
             ->values($user)
-            ->execute();
+            ->executeQuery();
     }
 
     /**
-     * @param array $user
-     * @return void
      * @throws EmptyUidException
      * @throws EmptyUsernameException
      * @throws EmptyPasswordException
@@ -113,19 +112,16 @@ abstract class AbstractUserRepository implements UserRepositoryInterface
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($user['uid'], \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($user['uid'], Connection::PARAM_INT)
                 )
             );
         foreach ($user as $key => $value) {
             $queryBuilder->set($key, $value);
         }
-        $queryBuilder->execute();
+        $queryBuilder->executeQuery();
     }
 
-    /**
-     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
-     */
-    protected function getQueryBuilder()
+    protected function getQueryBuilder(): QueryBuilder
     {
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
         $queryBuilder = $connectionPool->getQueryBuilderForTable($this->tableName);

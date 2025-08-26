@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\LoginProvider;
@@ -27,30 +28,18 @@ abstract class AbstractLoginProvider implements LoginProviderInterface
 {
     public const DEFAULT_TEMPLATE = 'EXT:openid_connect/Resources/Private/Templates/Backend/Login.html';
 
-    /**
-     * @var array
-     */
-    protected $extensionConfiguration;
+    protected array $extensionConfiguration = [];
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?? [];
     }
 
-    /**
-     * @param StandaloneView $view
-     * @param PageRenderer $pageRenderer
-     * @param LoginController $loginController
-     */
     public function render(
         StandaloneView $view,
         PageRenderer $pageRenderer,
         LoginController $loginController
-    )
-    {
+    ) {
         $filename = $this->extensionConfiguration['backendLoginProviderTemplate'] ?? static::DEFAULT_TEMPLATE;
         $templatePathAndFilename = GeneralUtility::getFileAbsFileName($filename);
         $view->setTemplatePathAndFilename($templatePathAndFilename);

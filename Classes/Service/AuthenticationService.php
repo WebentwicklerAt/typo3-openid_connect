@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Service;
@@ -20,6 +21,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Authentication\AbstractAuthenticationService;
 use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
+use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WebentwicklerAt\OpenidConnect\Repository\UserRepositoryFactory;
@@ -50,15 +52,9 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
     public const AUTH_USER_AUTHENTICATED = 0;
     public const AUTH_USER_NOTAUTHENTICATED_FINAL = -1;
 
-    /**
-     * @var AbstractUserAuthentication
-     */
-    protected $parentObject;
+    protected AbstractUserAuthentication $parentObject;
 
-    /**
-     * @var array|null
-     */
-    protected $userinfo;
+    protected ?array $userinfo = null;
 
     /**
      * Initialize authentication service
@@ -91,18 +87,17 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
     public function processLoginData(array &$loginData, $passwordTransmissionStrategy)
     {
         $isProcessed = static::PROCESS_UNPROCESSED;
-        if (
-            GeneralUtility::_GP('tx_openidconnect')
-            && GeneralUtility::_GP('tx_openidconnect') === static::OIDC_LOGINRETURN
-        ) {
-            $originalRedirectUri = GeneralUtility::_GP('tx_openidconnect_redirecturi');
+        $request = ServerRequestFactory::fromGlobals();
+        $returnAction = $request->getParsedBody()['tx_openidconnect'] ?? $request->getQueryParams()['tx_openidconnect'] ?? null;
+        if ($returnAction === static::OIDC_LOGINRETURN) {
+            $originalRedirectUri = $request->getParsedBody()['tx_openidconnect_redirecturi'] ?? $request->getQueryParams()['tx_openidconnect_redirecturi'] ?? null;
             $settings = GeneralUtility::makeInstance(Settings::class);
             $mode = MiscUtility::getModeFromAuthenticationServiceSubtype($this->mode);
             $redirectUri = OpenidConnectUtility::getRedirectUri(
                 $mode,
                 static::LOGINTYPE_LOGIN,
                 static::OIDC_LOGINRETURN,
-                $originalRedirectUri
+                $originalRedirectUri,
             );
             $settings->setRedirectUri($redirectUri);
             $oidcService = GeneralUtility::makeInstance(OpenidConnectService::class);
@@ -112,12 +107,12 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
                 $this->logger->debug(
                     sprintf(
                         'Returned from OpenID Connect login with userinfo "%s"',
-                        print_r($this->userinfo, true)
-                    )
+                        print_r($this->userinfo, true),
+                    ),
                 );
             } else {
                 $this->logger->error(
-                    'Returned from OpenID Connect with invalid login'
+                    'Returned from OpenID Connect with invalid login',
                 );
             }
             $isProcessed = static::PROCESS_PROCESSED_FINAL;
@@ -144,23 +139,24 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
                 'userinfo' => $this->userinfo,
                 'userRepository' => UserRepositoryFactory::getInstance($mode),
             ];
-            foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['getUser'] as $_funcRef) {
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['getUser'] as $_funcRef) {
                 GeneralUtility::callUserFunction($_funcRef, $_params, $this);
             }
+            // @phpstan-ignore if.alwaysFalse
             if ($user) {
                 $this->logger->debug(
                     sprintf(
                         'OpenID Connect successfully fetched user "%s" with userinfo "%s"',
                         print_r($user, true),
-                        print_r($this->userinfo, true)
-                    )
+                        print_r($this->userinfo, true),
+                    ),
                 );
             } else {
                 $this->logger->error(
                     sprintf(
                         'OpenID Connect failed fetch user with userinfo "%s"',
-                        print_r($this->userinfo, true)
-                    )
+                        print_r($this->userinfo, true),
+                    ),
                 );
             }
         }
@@ -192,7 +188,7 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
                 'auth' => &$auth,
                 'user' => $user,
             ];
-            foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['authUser'] as $_funcRef) {
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tx_openidconnect']['AuthenticationService']['authUser'] as $_funcRef) {
                 GeneralUtility::callUserFunction($_funcRef, $_params, $this);
             }
             if ($auth === static::AUTH_USER_AUTHENTICATED || $auth === static::AUTH_USER_AUTHENTICATED_FINAL) {
@@ -200,16 +196,16 @@ class AuthenticationService extends AbstractAuthenticationService implements Log
                     sprintf(
                         'OpenID Connect login authentication succeeded with status code "%d" with userinfo "%s"',
                         $auth,
-                        print_r($this->userinfo, true)
-                    )
+                        print_r($this->userinfo, true),
+                    ),
                 );
             } else {
                 $this->logger->error(
                     sprintf(
                         'OpenID Connect login authentication failed with status code "%d" with userinfo "%s"',
                         $auth,
-                        print_r($this->userinfo, true)
-                    )
+                        print_r($this->userinfo, true),
+                    ),
                 );
             }
         }

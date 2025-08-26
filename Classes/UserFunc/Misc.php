@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\UserFunc;
@@ -21,9 +22,6 @@ use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
 class Misc
 {
     /**
-     * @param string $content
-     * @param array $conf
-     * @return string
      * @throws \Exception
      */
     public function randomString(string $content, array $conf): string

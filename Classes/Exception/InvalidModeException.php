@@ -17,6 +17,4 @@ declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Exception;
 
-class InvalidModeException extends \Exception
-{
-}
+class InvalidModeException extends \Exception {}

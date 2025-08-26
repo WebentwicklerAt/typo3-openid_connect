@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Utility;
@@ -24,8 +25,6 @@ class MiscUtility
     public const MODE_BE = 'BE';
 
     /**
-     * @param int $length
-     * @return string
      * @throws \Exception
      */
     public static function randomString(int $length = 32): string
@@ -36,8 +35,6 @@ class MiscUtility
     }
 
     /**
-     * @param string $authenticationServiceSubtype
-     * @return string
      * @throws InvalidModeException
      */
     public static function getModeFromAuthenticationServiceSubtype(string $authenticationServiceSubtype): string
@@ -49,10 +46,6 @@ class MiscUtility
         return $mode;
     }
 
-    /**
-     * @param string $mode
-     * @return bool
-     */
     public static function isValidMode(string $mode): bool
     {
         return in_array($mode, [static::MODE_FE, static::MODE_BE], true);

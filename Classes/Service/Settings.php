@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Service;
@@ -20,81 +21,46 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Settings
 {
-    /**
-     * @var array
-     */
-    protected $extensionConfiguration;
+    protected array $extensionConfiguration = [];
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?? [];
         $this->scopes = $this->extensionConfiguration['scopes'];
     }
 
-    /**
-     * @var string
-     */
-    protected $redirectUri;
+    protected ?string $redirectUri = null;
 
-    /**
-     * @param string $redirectUri
-     * @return void
-     */
     public function setRedirectUri(?string $redirectUri): void
     {
         $this->redirectUri = $redirectUri;
     }
 
-    /**
-     * @return string
-     */
     public function getRedirectUri(): ?string
     {
         return $this->redirectUri;
     }
 
-    /**
-     * @var string
-     */
-    protected $scopes;
+    protected string $scopes = '';
 
-    /**
-     * @param string $scopes
-     * @return void
-     */
-    public function setScopes(string $scopes)
+    public function setScopes(string $scopes): void
     {
         $this->scopes = $scopes;
     }
 
-    /**
-     * @param array $scopes
-     * @return void
-     */
-    public function setScopesArray(array $scopes)
+    public function setScopesArray(array $scopes): void
     {
         $this->scopes = implode(',', $scopes);
     }
 
-    /**
-     * @param
-     * @return void
-     */
-    public function addScopes($scopes)
+    public function addScopes(array $scopes): void
     {
         $items = $this->getScopesArray();
         $items[] = $scopes;
         $this->setScopesArray($items);
     }
 
-    /**
-     * @param
-     * @return void
-     */
-    public function removeScopes($scopes)
+    public function removeScopes(array $scopes): void
     {
         $items = $this->getScopesArray();
         $key = array_search($scopes, $items);
@@ -104,25 +70,16 @@ class Settings
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getScopesArray()
+    public function getScopesArray(): array
     {
         return GeneralUtility::trimExplode(',', $this->scopes, true);
     }
 
-    /**
-     * @return string
-     */
-    public function getScopes()
+    public function getScopes(): string
     {
         return $this->scopes;
     }
 
-    /**
-     * @return array
-     */
     public function asArray(): array
     {
         return [

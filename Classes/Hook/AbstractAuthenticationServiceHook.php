@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Hook;
@@ -16,18 +17,13 @@ namespace WebentwicklerAt\OpenidConnect\Hook;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use TYPO3\CMS\Backend\Configuration\TypoScript\ConditionMatching\ConditionMatcher;
-use TYPO3\CMS\Core\Cache\CacheManager;
-use TYPO3\CMS\Core\Configuration\Parser\PageTsConfigParser;
-use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
-use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
+use TYPO3\CMS\Core\TypoScript\TypoScriptStringFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\FrontendSimulatorUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use WebentwicklerAt\OpenidConnect\Controller\TypoScriptFrontendController;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
 use WebentwicklerAt\OpenidConnect\Utility\MiscUtility;
 
@@ -37,87 +33,48 @@ abstract class AbstractAuthenticationServiceHook implements AuthenticationServic
 
     public const DEFAULT_MAPPING_CONFIGURATION = 'EXT:openid_connect/Configuration/TypoScript/Mapping.typoscript';
 
-    /**
-     * @var array
-     */
-    protected $extensionConfiguration;
+    protected array $extensionConfiguration = [];
 
-    /**
-     * @var array
-     */
-    protected $settings;
+    protected array $settings = [];
 
-    /**
-     * @var ContentObjectRenderer
-     */
-    protected $cObj;
+    protected ContentObjectRenderer $cObj;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?? [];
-        if (!empty($GLOBALS['TSFE'])) {
-            $this->cObj = $GLOBALS['TSFE']->cObj;
-        } else {
-            $this->cObj = GeneralUtility::makeInstance(
-                ContentObjectRenderer::class,
-                GeneralUtility::makeInstance(TypoScriptFrontendController::class)
-            );
-            $request = ServerRequestFactory::fromGlobals();
-            $this->cObj->setRequest($request);
+        if (empty($GLOBALS['TSFE'])) {
+            FrontendSimulatorUtility::simulateFrontendEnvironment();
         }
+        $this->cObj = $GLOBALS['TSFE']->cObj;
+        $request = ServerRequestFactory::fromGlobals();
+        $this->cObj->setRequest($request);
     }
 
-    /**
-     * @param array $params
-     * @param AuthenticationService $authenticationService
-     * @return array
-     */
     abstract public function getUser(
         array $params,
-        AuthenticationService $authenticationService
+        AuthenticationService $authenticationService,
     ): array;
 
-    /**
-     * @param array $params
-     * @param AuthenticationService $authenticationService
-     * @return array
-     */
     abstract public function authUser(
         array $params,
-        AuthenticationService $authenticationService
+        AuthenticationService $authenticationService,
     ): array;
 
-    /**
-     * @param AuthenticationService $authenticationService
-     * @return void
-     * @throws \TYPO3\CMS\Core\Cache\Exception\NoSuchCacheException
-     */
     protected function loadTypoScriptSettings(AuthenticationService $authenticationService)
     {
         $filename = $this->extensionConfiguration['mappingConfiguration'] ?? static::DEFAULT_MAPPING_CONFIGURATION;
         $url = GeneralUtility::getFileAbsFileName($filename);
         $content = GeneralUtility::getUrl($url);
-        $parser = GeneralUtility::makeInstance(
-            PageTsConfigParser::class,
-            GeneralUtility::makeInstance(TypoScriptParser::class),
-            GeneralUtility::makeInstance(CacheManager::class)->getCache('hash')
-        );
-        $matcher = GeneralUtility::makeInstance(ConditionMatcher::class);
-        $typoScript = $parser->parse($content, $matcher);
+        /** @var TypoScriptStringFactory $typoScriptStringFactory */
+        $typoScriptStringFactory = GeneralUtility::makeInstance(TypoScriptStringFactory::class);
+        $cacheIdentifier = 'tx_openidconnect_' . md5($filename);
+        $typoScriptTree = $typoScriptStringFactory->parseFromStringWithIncludes($cacheIdentifier, $content);
+        $typoScript = $typoScriptTree->toArray();
         $mode = MiscUtility::getModeFromAuthenticationServiceSubtype($authenticationService->mode);
         $this->settings = $typoScript['config.']['tx_openidconnect.']['settings.'][$mode . '.'];
     }
 
-    /**
-     * @param array $object
-     * @param array $settings
-     * @param array $data
-     * @return void
-     */
-    protected function mapFields(array &$object, array $settings, array $data)
+    protected function mapFields(array &$object, array $settings, array $data): void
     {
         foreach ($settings as $fieldName => $name) {
             if (substr($fieldName, -1) !== '.') {
@@ -127,12 +84,6 @@ abstract class AbstractAuthenticationServiceHook implements AuthenticationServic
         }
     }
 
-    /**
-     * @param string $name
-     * @param array $conf
-     * @param array $data
-     * @return string
-     */
     protected function mapField(string $name, array $conf, array $data): string
     {
         $this->cObj->start($data);

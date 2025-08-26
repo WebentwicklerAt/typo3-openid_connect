@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Controller;
@@ -20,24 +21,13 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 class AuthenticationController extends ActionController
 {
-    /**
-     * @var array
-     */
-    protected $extensionConfiguration;
+    protected array $extensionConfiguration = [];
 
-    /**
-     * @return void
-     */
-    public function initializeAction()
+    public function initializeAction(): void
     {
         parent::initializeAction();
         $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?? [];
     }
 
-    /**
-     * @return void
-     */
-    public function indexAction()
-    {
-    }
+    public function indexAction(): void {}
 }

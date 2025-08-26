@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Controller;
@@ -19,7 +20,7 @@ namespace WebentwicklerAt\OpenidConnect\Controller;
 class TypoScriptFrontendController extends \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
 {
     /**
-     * @inheritdoc
+     * @phpstan-ignore-next-line
      */
     public function __construct(
         $context = null,
@@ -29,7 +30,5 @@ class TypoScriptFrontendController extends \TYPO3\CMS\Frontend\Controller\TypoSc
         $cHashOrFrontendUser = null,
         $_2 = null,
         $MP = null
-    )
-    {
-    }
+    ) {}
 }

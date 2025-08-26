@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Repository;
@@ -16,6 +17,4 @@ namespace WebentwicklerAt\OpenidConnect\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
-class EmptyPasswordException extends \Exception
-{
-}
+class EmptyPasswordException extends \Exception {}

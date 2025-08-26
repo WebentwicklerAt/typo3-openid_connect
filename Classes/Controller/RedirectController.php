@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Controller;
@@ -16,6 +17,7 @@ namespace WebentwicklerAt\OpenidConnect\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use WebentwicklerAt\OpenidConnect\Service\AuthenticationService;
@@ -24,10 +26,7 @@ use WebentwicklerAt\OpenidConnect\Utility\OpenidConnectUtility;
 
 class RedirectController extends ActionController
 {
-    /**
-     * @return void
-     */
-    public function toLoginAction()
+    public function toLoginAction(): ResponseInterface
     {
         $originalRedirectUri = GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL');
         $redirectUri = OpenidConnectUtility::getRedirectUri(
@@ -36,6 +35,6 @@ class RedirectController extends ActionController
             AuthenticationService::OIDC_LOGIN,
             $originalRedirectUri
         );
-        $this->redirectToUri($redirectUri);
+        return $this->redirectToUri($redirectUri);
     }
 }

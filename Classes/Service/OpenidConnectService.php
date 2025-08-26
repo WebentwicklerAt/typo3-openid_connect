@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WebentwicklerAt\OpenidConnect\Service;
@@ -20,45 +21,25 @@ use Jumbojett\OpenIDConnectClient;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WebentwicklerAt\OpenidConnect\LoginProvider\OpenidConnectLoginProvider;
 
 class OpenidConnectService implements SingletonInterface
 {
-    /**
-     * @var array
-     */
-    protected $extensionConfiguration;
+    protected array $extensionConfiguration = [];
 
-    /**
-     * @var array
-     */
-    protected $settings;
+    protected ?array $settings = null;
 
-    /**
-     * @param array $settings
-     * @return void
-     */
     public function setSettings(?array $settings): void
     {
         $this->settings = $settings;
     }
 
-    /**
-     * @return array
-     */
     public function getSettings(): ?array
     {
         return $this->settings;
     }
 
-    /**
-     * @var OpenidConnectLoginProvider
-     */
-    protected $client;
+    protected OpenIDConnectClient $client;
 
-    /**
-     * @param array $settings
-     */
     public function __construct(array $settings = [])
     {
         $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['openid_connect'] ?? [];
@@ -78,14 +59,9 @@ class OpenidConnectService implements SingletonInterface
         }
     }
 
-    public function discover()
-    {
-
-    }
+    public function discover() {}
 
     /**
-     * @param Settings|null $settings
-     * @return bool
      * @throws \Exception
      */
     public function auth(?Settings $settings = null): bool
@@ -102,14 +78,9 @@ class OpenidConnectService implements SingletonInterface
         return $isAuthenticated;
     }
 
-    public function token()
-    {
-
-    }
+    public function token() {}
 
     /**
-     * @param Settings|null $settings
-     * @return void
      * @throws \Exception
      */
     public function logout(?Settings $settings = null): void
@@ -120,8 +91,6 @@ class OpenidConnectService implements SingletonInterface
     }
 
     /**
-     * @param string|null $attribute
-     * @return array|null
      * @throws \Exception
      */
     public function userinfo(?string $attribute = null): ?array
@@ -139,10 +108,6 @@ class OpenidConnectService implements SingletonInterface
         $this->client->revokeToken($token);
     }
 
-    /**
-     * @param Settings|null $settings
-     * @return void
-     */
     protected function setClientSettings(?Settings $settings): void
     {
         if ($settings) {
