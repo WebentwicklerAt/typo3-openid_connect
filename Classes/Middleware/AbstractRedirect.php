@@ -38,12 +38,14 @@ abstract class AbstractRedirect implements LoggerAwareInterface, MiddlewareInter
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $queryParams = $request->getQueryParams();
-        if (!empty($queryParams['tx_openidconnect'])) {
-            if ($queryParams['tx_openidconnect'] === AuthenticationService::OIDC_LOGIN) {
+        $queryParams = $request->getQueryParams() ?? [];
+        $parsedBody = $request->getParsedBody() ?? [];
+        $params = array_merge($queryParams, $parsedBody);
+        if (!empty($params['tx_openidconnect'])) {
+            if ($params['tx_openidconnect'] === AuthenticationService::OIDC_LOGIN) {
                 $originalRedirectUri = null;
-                if (!empty($queryParams['tx_openidconnect_redirecturi'])) {
-                    $originalRedirectUri = $queryParams['tx_openidconnect_redirecturi'];
+                if (!empty($params['tx_openidconnect_redirecturi'])) {
+                    $originalRedirectUri = $params['tx_openidconnect_redirecturi'];
                 }
                 $settings = GeneralUtility::makeInstance(Settings::class);
                 $redirectUri = OpenidConnectUtility::getRedirectUri(
@@ -62,10 +64,10 @@ abstract class AbstractRedirect implements LoggerAwareInterface, MiddlewareInter
                 $oidcService = GeneralUtility::makeInstance(OpenidConnectService::class);
                 $oidcService->auth($settings);
             } elseif (
-                $queryParams['tx_openidconnect'] === AuthenticationService::OIDC_LOGINRETURN
-                && !empty($queryParams['tx_openidconnect_redirecturi'])
+                $params['tx_openidconnect'] === AuthenticationService::OIDC_LOGINRETURN
+                && !empty($params['tx_openidconnect_redirecturi'])
             ) {
-                $originalRedirectUri = $queryParams['tx_openidconnect_redirecturi'];
+                $originalRedirectUri = $params['tx_openidconnect_redirecturi'];
                 if (OpenidConnectUtility::isTrustedRedirectUrl($originalRedirectUri)) {
                     $this->logger->debug(
                         sprintf(
